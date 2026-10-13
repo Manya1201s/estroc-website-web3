@@ -8,6 +8,7 @@ import CopyEmail from "@/components/estroc/CopyEmail";
 import Grain from "@/components/estroc/Grain";
 import { MaskLines, Rise } from "@/components/estroc/MaskReveal";
 import { BLOCKCHAIN_ROUTE, SiteFooter, SiteHeader, useOpenEnquiry } from "@/components/estroc/SiteChrome";
+import BlockchainQuest from "@/components/estroc/web3/BlockchainQuest";
 import ChainVisual from "@/components/estroc/web3/ChainVisual";
 import ProjectConcepts from "@/components/estroc/web3/ProjectConcepts";
 import ServiceCards from "@/components/estroc/web3/ServiceCards";
@@ -101,6 +102,25 @@ export default function BlockchainWeb3() {
               <span>Example architecture / illustrative</span>
               <span className="hidden sm:block">Ledger · contracts · APIs · apps</span>
             </div>
+          </div>
+        </section>
+
+        {/* ========================= MINI-GAME ========================= */}
+
+        <section id="quest" className="border-t border-white/[0.08]" aria-labelledby="web3-quest-title" data-testid="web3-quest-section">
+          <div className="mx-auto max-w-7xl px-5 py-10 sm:px-8 lg:px-10 lg:py-14">
+            <div className="mb-5 flex flex-wrap items-end justify-between gap-x-8 gap-y-2" data-testid="web3-quest-heading-block">
+              <div>
+                <p className="text-[10px] font-mono uppercase tracking-[0.22em] text-[#ff5500]">Play / Take a break</p>
+                <h2 id="web3-quest-title" className="mt-2 text-2xl font-semibold tracking-[-0.04em] text-zinc-100 sm:text-3xl">
+                  ESTROC <span className="text-zinc-500">BLOCKCHAIN QUEST</span>
+                </h2>
+              </div>
+              <p className="max-w-md text-sm leading-relaxed text-zinc-500">
+                Break the ASCII blocks and collect the coins they drop. Game coins only — no wallet, no crypto, no real value.
+              </p>
+            </div>
+            <BlockchainQuest />
           </div>
         </section>
 
