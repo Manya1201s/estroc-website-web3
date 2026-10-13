@@ -18,11 +18,13 @@ import { useTheme } from "@/lib/theme";
  */
 
 export const BLOCKCHAIN_ROUTE = "/blockchain-web3";
+export const VISION_ROUTE = "/computer-vision";
 
 const navLinks: [target: string, label: string][] = [
   ["work", "WORK"],
   ["build", "CAPABILITIES"],
   [BLOCKCHAIN_ROUTE, "WEB3"],
+  [VISION_ROUTE, "VISION"],
   ["why", "WHY ESTROC"],
   ["process", "HOW WE WORK"],
   ["about", "ABOUT"],
@@ -136,7 +138,7 @@ export function SiteHeader({ menuOpen, onMenuOpenChange }: SiteHeaderProps) {
           </button>
 
           <nav
-            className="hidden items-center gap-5 lg:flex xl:gap-6"
+            className="hidden items-center gap-3.5 lg:flex xl:gap-6"
             aria-label="Primary navigation"
           >
             {navLinks.map(([target, label]) => (
@@ -145,7 +147,7 @@ export function SiteHeader({ menuOpen, onMenuOpenChange }: SiteHeaderProps) {
                 type="button"
                 onClick={() => go(target)}
                 aria-current={current(target)}
-                className={`text-sm font-mono uppercase tracking-[0.14em] transition-colors hover:text-zinc-100 ${
+                className={`text-sm font-mono uppercase tracking-[0.08em] transition-colors hover:text-zinc-100 xl:tracking-[0.14em] ${
                   current(target) ? "text-[#ff5500]" : "text-zinc-500"
                 }`}
                 data-testid={`nav-${slug(target)}-link`}
@@ -316,6 +318,7 @@ export function SiteFooter() {
               ["Work", "work"],
               ["Capabilities", "build"],
               ["Blockchain & Web3", BLOCKCHAIN_ROUTE],
+              ["Computer Vision", VISION_ROUTE],
               ["Why ESTROC", "why"],
               ["How we work", "process"],
               ["About", "about"],
@@ -335,6 +338,7 @@ export function SiteFooter() {
               ["Custom software", "build"],
               ["CRM", "build"],
               ["AI solutions", "build"],
+              ["Computer vision", VISION_ROUTE],
               ["Automation", "build"],
               ["Blockchain", BLOCKCHAIN_ROUTE],
             ]}

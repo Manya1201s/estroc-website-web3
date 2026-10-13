@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { ArrowDown, ArrowRight, ShieldCheck } from "lucide-react";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { Toaster } from "@/components/ui/sonner";
@@ -7,7 +7,7 @@ import Chatbot from "@/components/estroc/Chatbot";
 import CopyEmail from "@/components/estroc/CopyEmail";
 import Grain from "@/components/estroc/Grain";
 import { MaskLines, Rise } from "@/components/estroc/MaskReveal";
-import { SiteFooter, SiteHeader, useOpenEnquiry } from "@/components/estroc/SiteChrome";
+import { BLOCKCHAIN_ROUTE, SiteFooter, SiteHeader, useOpenEnquiry } from "@/components/estroc/SiteChrome";
 import ChainVisual from "@/components/estroc/web3/ChainVisual";
 import ProjectConcepts from "@/components/estroc/web3/ProjectConcepts";
 import ServiceCards from "@/components/estroc/web3/ServiceCards";
@@ -15,6 +15,7 @@ import UseCaseExplorer from "@/components/estroc/web3/UseCaseExplorer";
 import { SectionIntro } from "@/components/estroc/web3/shared";
 import { web3Basics } from "@/lib/web3Content";
 import { useScrollTo } from "@/lib/smoothScroll";
+import { usePageMeta } from "@/lib/usePageMeta";
 
 const BLOCKCHAIN_INTEREST = "Blockchain / Web3";
 
@@ -24,25 +25,6 @@ const meta = {
     "ESTROC designs and develops blockchain applications, smart contracts, Web3 platforms, NFT and tokenization solutions and blockchain integrations for businesses.",
 };
 
-/** Swaps the document head for this page and puts the homepage's back on the way out. */
-function usePageMeta() {
-  useEffect(() => {
-    const description = document.querySelector<HTMLMetaElement>('meta[name="description"]');
-    const canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
-    const previous = { title: document.title, description: description?.content, canonical: canonical?.href };
-
-    document.title = meta.title;
-    if (description) description.content = meta.description;
-    if (canonical) canonical.href = "https://estroc.co.in/blockchain-web3";
-
-    return () => {
-      document.title = previous.title;
-      if (description && previous.description) description.content = previous.description;
-      if (canonical && previous.canonical) canonical.href = previous.canonical;
-    };
-  }, []);
-}
-
 export default function BlockchainWeb3() {
   const [menuOpen, setMenuOpen] = useState(false);
   const reducedMotion = useReducedMotion();
@@ -50,7 +32,7 @@ export default function BlockchainWeb3() {
   const openEnquiry = useOpenEnquiry();
   const heroRef = useRef<HTMLElement>(null);
 
-  usePageMeta();
+  usePageMeta({ ...meta, path: BLOCKCHAIN_ROUTE });
 
   const { scrollYProgress: heroProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
   const heroY = useTransform(heroProgress, [0, 1], ["0%", "-14%"]);

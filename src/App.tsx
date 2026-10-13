@@ -2,11 +2,12 @@ import { lazy, Suspense, useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import Home from "@/pages/Home";
 import NotFound from "@/pages/NotFound";
-import { BLOCKCHAIN_ROUTE } from "@/components/estroc/SiteChrome";
+import { BLOCKCHAIN_ROUTE, VISION_ROUTE } from "@/components/estroc/SiteChrome";
 import { HEADER_OFFSET, useLenis, useScrollTo } from "@/lib/smoothScroll";
 
 // Split out so the homepage bundle does not carry a page most visitors never open.
 const BlockchainWeb3 = lazy(() => import("@/pages/BlockchainWeb3"));
+const ComputerVision = lazy(() => import("@/pages/ComputerVision"));
 
 /**
  * Lenis keeps its own scroll position, so a route change would otherwise open
@@ -58,6 +59,14 @@ export default function App() {
           element={
             <Suspense fallback={<div className="min-h-screen bg-[#0a0a0b]" />}>
               <BlockchainWeb3 />
+            </Suspense>
+          }
+        />
+        <Route
+          path={VISION_ROUTE}
+          element={
+            <Suspense fallback={<div className="min-h-screen bg-[#0a0a0b]" />}>
+              <ComputerVision />
             </Suspense>
           }
         />

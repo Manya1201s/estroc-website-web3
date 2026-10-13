@@ -28,7 +28,7 @@ import ProjectForm from "@/components/estroc/ProjectForm";
 import SectionHeading from "@/components/estroc/SectionHeading";
 import ServicesMarquee from "@/components/estroc/ServicesMarquee";
 import Testimonials from "@/components/estroc/Testimonials";
-import { BLOCKCHAIN_ROUTE, SiteFooter, SiteHeader } from "@/components/estroc/SiteChrome";
+import { BLOCKCHAIN_ROUTE, SiteFooter, SiteHeader, VISION_ROUTE } from "@/components/estroc/SiteChrome";
 import type { EnquiryNavState } from "@/components/estroc/SiteChrome";
 import WorkSection from "@/components/estroc/WorkSection";
 import { buildCategories } from "@/lib/services";
@@ -441,6 +441,17 @@ export default function Home() {
                       data-testid="service-detail-explore-web3-link"
                     >
                       Explore Blockchain &amp; Web3
+                      <ArrowRight className="h-4 w-4 transition-transform group-hover/cta:translate-x-1" />
+                    </Link>
+                  )}
+
+                  {selectedCategory.name === "AI & Automation" && (
+                    <Link
+                      to={VISION_ROUTE}
+                      className="group/cta mt-9 inline-flex items-center gap-3 border border-[#ff5500] px-5 py-3 text-sm font-medium text-[#ff5500] transition-colors hover:bg-[#ff5500] hover:text-[#0a0a0b] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff5500]"
+                      data-testid="service-detail-explore-vision-link"
+                    >
+                      Explore Computer Vision &amp; Visual AI
                       <ArrowRight className="h-4 w-4 transition-transform group-hover/cta:translate-x-1" />
                     </Link>
                   )}

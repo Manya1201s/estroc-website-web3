@@ -347,6 +347,40 @@ html.light [class~="bg-[#ff5500]/[0.07]"] {
   .w3-dash, .w3-tx-pulse { animation: none; }
 }
 
+/* ── Computer Vision page ─────────────────────────────────────── */
+
+/* Scene surfaces: canvas, objects, darker objects, and paper. */
+.cv-fill { fill: #0d0d0f; }
+.cv-fill-2 { fill: #18181b; }
+.cv-fill-3 { fill: #232328; }
+.cv-paper { fill: #1a1a1d; }
+html.light .cv-fill { fill: #f3f3f0; }
+html.light .cv-fill-2 { fill: #e7e7e3; }
+html.light .cv-fill-3 { fill: #d9d9d4; }
+html.light .cv-paper { fill: #ffffff; }
+/* Text on annotation tags stays dark: the tags are orange or mid-grey in both themes. */
+.cv-tag-text { fill: #0a0a0b; }
+html.light [class~="bg-[#ff5500]/[0.06]"] { background-color: rgb(255 85 0 / 7%); }
+
+/* Hero: a slow scan line, a forklift edging forward, boxes settling in. */
+.cv-scan { animation: cv-scan 6s linear infinite; }
+@keyframes cv-scan { from { transform: translateY(0); } to { transform: translateY(460px); } }
+.cv-forklift { animation: cv-forklift 7s ease-in-out infinite alternate; }
+@keyframes cv-forklift { from { transform: translateX(-8px); } to { transform: translateX(8px); } }
+.cv-dash { animation: cv-dash 1.2s linear infinite; }
+@keyframes cv-dash { to { stroke-dashoffset: -20; } }
+.cv-blink { animation: cv-blink 1.6s steps(2, start) infinite; }
+@keyframes cv-blink { to { visibility: hidden; } }
+.cv-boxes > g { animation: cv-box-in 700ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+.cv-boxes > g:nth-child(2) { animation-delay: 120ms; }
+.cv-boxes > g:nth-child(3) { animation-delay: 240ms; }
+.cv-boxes > g:nth-child(4) { animation-delay: 360ms; }
+.cv-boxes > g:nth-child(5) { animation-delay: 480ms; }
+@keyframes cv-box-in { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .cv-scan, .cv-forklift, .cv-dash, .cv-blink, .cv-boxes > g { animation: none; }
+}
+
 /* ── Services marquee ─────────────────────────────────────────── */
 
 .marquee {

@@ -19,7 +19,7 @@ export interface ProjectFormValues {
   phone: string;
 }
 
-const interestOptions = ["Website", "Web App", "Mobile App", "SaaS / MVP", "Custom Software", "AI & Automation", "Blockchain / Web3", "Other"];
+const interestOptions = ["Website", "Web App", "Mobile App", "SaaS / MVP", "Custom Software", "AI & Automation", "Blockchain / Web3", "Computer Vision / Visual AI", "Other"];
 
 /**
  * A nudge from the page the form sits on — e.g. a "Discuss a project" button
