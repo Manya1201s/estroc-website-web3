@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import FooterWordmark from "@/components/estroc/FooterWordmark";
 import ScrollProgress from "@/components/estroc/ScrollProgress";
 import ThemeToggle from "@/components/estroc/ThemeToggle";
+import type { ProjectFormPrefill } from "@/components/estroc/ProjectForm";
 import { useLenis, useScrollTo } from "@/lib/smoothScroll";
 import { useTheme } from "@/lib/theme";
 
@@ -51,6 +52,27 @@ export function useGoTo() {
   };
 }
 
+/** The homepage section holding the one enquiry form on the site. */
+export const ENQUIRY_SECTION = "start-a-project";
+
+/** Navigation state a page sends so the homepage form arrives pre-selected. */
+export interface EnquiryNavState {
+  enquiryPrefill?: Omit<ProjectFormPrefill, "key">;
+}
+
+/**
+ * Opens the homepage enquiry form from any other page, optionally ticking an
+ * interest and suggesting a message (ProjectForm never overwrites typed text).
+ */
+export function useOpenEnquiry() {
+  const navigate = useNavigate();
+
+  return (prefill?: Omit<ProjectFormPrefill, "key">) => {
+    const state: EnquiryNavState | null = prefill ? { enquiryPrefill: prefill } : null;
+    navigate(`/#${ENQUIRY_SECTION}`, { state });
+  };
+}
+
 interface SiteHeaderProps {
   menuOpen: boolean;
   onMenuOpenChange: (open: boolean) => void;
@@ -83,8 +105,11 @@ export function SiteHeader({ menuOpen, onMenuOpenChange }: SiteHeaderProps) {
   }, [menuOpen, lenis, onMenuOpenChange]);
 
   const go = (target: string) => {
-    goTo(target);
+    // The open menu pauses Lenis, and resuming it resets any scroll in flight —
+    // so resume first, then scroll, or a jump chosen from the menu never runs.
+    if (menuOpen) lenis?.start();
     onMenuOpenChange(false);
+    goTo(target);
   };
 
   const current = (target: string) => (target === pathname ? "page" : undefined);
@@ -140,7 +165,7 @@ export function SiteHeader({ menuOpen, onMenuOpenChange }: SiteHeaderProps) {
             <Button
               type="button"
               size="lg"
-              onClick={() => go("start-a-project")}
+              onClick={() => go(ENQUIRY_SECTION)}
               data-testid="nav-start-project-button"
             >
               Start a project
@@ -223,7 +248,7 @@ export function SiteHeader({ menuOpen, onMenuOpenChange }: SiteHeaderProps) {
                 type="button"
                 className="w-full"
                 size="lg"
-                onClick={() => go("start-a-project")}
+                onClick={() => go(ENQUIRY_SECTION)}
                 data-testid="mobile-nav-start-project-button"
               >
                 Start a project
@@ -294,7 +319,7 @@ export function SiteFooter() {
               ["Why ESTROC", "why"],
               ["How we work", "process"],
               ["About", "about"],
-              ["Contact", "start-a-project"],
+              ["Contact", ENQUIRY_SECTION],
             ]}
             onNavigate={goTo}
             testId="footer-navigation"

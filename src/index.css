@@ -319,6 +319,12 @@ html.light .w3-block {
   fill: #ffffff;
 }
 /* Light-theme counterparts for utilities new to this page. */
+html.light [class~="bg-white/15"] {
+  background-color: rgb(24 24 27 / 14%);
+}
+html.light [class~="divide-white/10"] > :not(:last-child) {
+  border-color: rgb(24 24 27 / 12%);
+}
 html.light [class~="bg-[#ff5500]/[0.07]"] {
   background-color: rgb(255 85 0 / 9%);
 }

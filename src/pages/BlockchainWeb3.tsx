@@ -1,31 +1,27 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowDown, ArrowRight, ArrowUpRight, ShieldCheck } from "lucide-react";
+import { ArrowDown, ArrowRight, ShieldCheck } from "lucide-react";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { Toaster } from "@/components/ui/sonner";
 import { Button } from "@/components/ui/button";
 import Chatbot from "@/components/estroc/Chatbot";
 import CopyEmail from "@/components/estroc/CopyEmail";
-import EditorialStatement from "@/components/estroc/EditorialStatement";
 import Grain from "@/components/estroc/Grain";
 import { MaskLines, Rise } from "@/components/estroc/MaskReveal";
-import ProjectForm from "@/components/estroc/ProjectForm";
-import type { ProjectFormPrefill } from "@/components/estroc/ProjectForm";
-import { SiteFooter, SiteHeader } from "@/components/estroc/SiteChrome";
-import AssetShowcase from "@/components/estroc/web3/AssetShowcase";
+import { SiteFooter, SiteHeader, useOpenEnquiry } from "@/components/estroc/SiteChrome";
 import ChainVisual from "@/components/estroc/web3/ChainVisual";
-import EcosystemExplorer from "@/components/estroc/web3/EcosystemExplorer";
-import LedgerExplainer from "@/components/estroc/web3/LedgerExplainer";
+import ProjectConcepts from "@/components/estroc/web3/ProjectConcepts";
+import ServiceCards from "@/components/estroc/web3/ServiceCards";
 import UseCaseExplorer from "@/components/estroc/web3/UseCaseExplorer";
-import { SectionIntro, focusRing } from "@/components/estroc/web3/shared";
-import { web3Process, web3Services } from "@/lib/web3Content";
+import { SectionIntro } from "@/components/estroc/web3/shared";
+import { web3Basics } from "@/lib/web3Content";
 import { useScrollTo } from "@/lib/smoothScroll";
 
 const BLOCKCHAIN_INTEREST = "Blockchain / Web3";
 
 const meta = {
-  title: "Blockchain & Web3 — ESTROC",
+  title: "Blockchain & Web3 Development — ESTROC",
   description:
-    "Explore blockchain, digital assets and decentralized technologies — and what businesses can build with them. Smart contracts, dApps, tokenization and more from ESTROC.",
+    "ESTROC designs and develops blockchain applications, smart contracts, Web3 platforms, NFT and tokenization solutions and blockchain integrations for businesses.",
 };
 
 /** Swaps the document head for this page and puts the homepage's back on the way out. */
@@ -49,9 +45,9 @@ function usePageMeta() {
 
 export default function BlockchainWeb3() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [prefill, setPrefill] = useState<ProjectFormPrefill>();
   const reducedMotion = useReducedMotion();
   const scrollToId = useScrollTo();
+  const openEnquiry = useOpenEnquiry();
   const heroRef = useRef<HTMLElement>(null);
 
   usePageMeta();
@@ -60,15 +56,12 @@ export default function BlockchainWeb3() {
   const heroY = useTransform(heroProgress, [0, 1], ["0%", "-14%"]);
   const heroOpacity = useTransform(heroProgress, [0, 0.75], [1, 0]);
 
-  /** Every "discuss" button lands on the one enquiry form, with the topic pre-noted. */
-  const discuss = (topic?: string) => {
-    setPrefill({
-      key: Date.now(),
-      interest: BLOCKCHAIN_INTEREST,
-      message: topic ? `I'd like to discuss a project involving ${topic.toLowerCase()}.` : undefined,
-    });
-    scrollToId("start-a-project");
-  };
+  /**
+   * Every CTA opens the homepage enquiry form with Blockchain / Web3 ticked. A
+   * message is only seeded when the visitor hasn't written one (ProjectForm).
+   */
+  const enquire = (message?: string) => openEnquiry({ interest: BLOCKCHAIN_INTEREST, message });
+  const discussTopic = (topic: string) => enquire(`I'd like to discuss a project involving ${topic.toLowerCase()}.`);
 
   return (
     <div
@@ -84,37 +77,38 @@ export default function BlockchainWeb3() {
 
         <section
           ref={heroRef}
-          className="relative mx-auto grid min-h-screen max-w-7xl content-center items-center gap-y-12 px-5 pb-20 pt-32 [--hero-type:clamp(3.2rem,6.6vw,6.2rem)] sm:px-8 lg:grid-cols-[0.95fr_1.05fr] lg:gap-x-12 lg:px-10 lg:pb-16 lg:pt-28"
+          className="relative mx-auto grid min-h-screen max-w-7xl content-center items-center gap-y-12 px-5 pb-20 pt-32 [--hero-type:clamp(2.9rem,5.6vw,5.4rem)] sm:px-8 lg:grid-cols-[1fr_1fr] lg:gap-x-12 lg:px-10 lg:pb-16 lg:pt-28"
           data-testid="web3-hero-section"
         >
           <motion.div style={reducedMotion ? undefined : { y: heroY, opacity: heroOpacity }} className="relative z-10 max-w-xl">
             <Rise immediate className="mb-5">
-              <p className="text-xs font-mono uppercase tracking-[0.24em] text-[#ff5500] sm:text-sm">Blockchain &amp; Web3</p>
+              <p className="text-xs font-mono uppercase tracking-[0.24em] text-[#ff5500] sm:text-sm">Blockchain &amp; Web3 development</p>
             </Rise>
 
             <MaskLines
               as="h1"
               immediate
               delay={0.12}
-              lines={["BEYOND", "DIGITAL.", <span className="text-zinc-500">BUILT ON</span>, <span className="text-zinc-500">TRUST.</span>]}
-              className="text-[length:var(--hero-type)] font-bold leading-[0.9] tracking-[-0.085em] text-zinc-100"
+              lines={["BLOCKCHAIN", "SOLUTIONS.", <span className="text-zinc-500">BUILT FOR</span>, <span className="text-zinc-500">REAL BUSINESS.</span>]}
+              className="text-[length:var(--hero-type)] font-bold leading-[0.92] tracking-[-0.08em] text-zinc-100"
               testId="web3-hero-heading"
             />
 
             <Rise immediate delay={0.5} className="mt-8">
-              <p className="max-w-md text-base leading-relaxed text-zinc-400 sm:text-lg" data-testid="web3-hero-copy">
-                Explore blockchain, digital assets and decentralized technologies — and discover what businesses can build with them.
+              <p className="max-w-lg text-base leading-relaxed text-zinc-400 sm:text-lg" data-testid="web3-hero-copy">
+                ESTROC designs and develops blockchain applications, smart contracts and Web3 products that help businesses build
+                transparent, programmable and verifiable digital systems.
               </p>
             </Rise>
 
             <Rise immediate delay={0.6} className="mt-9 flex flex-wrap gap-3">
-              <Button type="button" onClick={() => scrollToId("ecosystem")} data-testid="web3-hero-explore-button">
-                Explore the Ecosystem
-                <ArrowDown className="ml-2 h-4 w-4" />
-              </Button>
-              <Button type="button" variant="outline" onClick={() => scrollToId("build-with-estroc")} data-testid="web3-hero-build-button">
-                Build with ESTROC
+              <Button type="button" size="lg" onClick={() => enquire()} className="px-4" data-testid="web3-hero-discuss-button">
+                Discuss Your Project
                 <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+              <Button type="button" size="lg" variant="outline" onClick={() => scrollToId("capabilities")} className="px-4" data-testid="web3-hero-capabilities-button">
+                Explore Our Capabilities
+                <ArrowDown className="ml-2 h-4 w-4" />
               </Button>
             </Rise>
           </motion.div>
@@ -122,191 +116,106 @@ export default function BlockchainWeb3() {
           <div className="relative">
             <ChainVisual scrollProgress={heroProgress} />
             <div className="mt-2 flex justify-between text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-600" data-testid="web3-hero-caption">
-              <span>Illustrative ledger / simulated data</span>
-              <span className="hidden sm:block">Not a live network</span>
+              <span>Example architecture / illustrative</span>
+              <span className="hidden sm:block">Ledger · contracts · APIs · apps</span>
             </div>
           </div>
         </section>
 
-        {/* ========================= 02 UNDERSTAND ========================= */}
+        {/* ========================= IN SHORT ========================= */}
 
-        <section id="understand" className="border-t border-white/[0.08]" data-testid="web3-understand-section">
+        <section className="border-t border-white/[0.08] bg-[#0d0d0f]" aria-labelledby="web3-basics-title" data-testid="web3-basics-section">
+          <div className="mx-auto grid max-w-7xl gap-8 px-5 py-12 sm:px-8 lg:grid-cols-[0.8fr_repeat(3,1fr)] lg:gap-10 lg:px-10">
+            <div>
+              <p className="text-[10px] font-mono uppercase tracking-[0.22em] text-[#ff5500]">In short</p>
+              <p id="web3-basics-title" className="mt-3 text-lg font-medium leading-snug tracking-tight text-zinc-100">
+                Why businesses use blockchain
+              </p>
+            </div>
+            {web3Basics.map(([title, copy], index) => (
+              <Rise key={title} delay={index * 0.06}>
+                <p className="text-sm font-medium text-zinc-200">{title}</p>
+                <p className="mt-2 text-sm leading-relaxed text-zinc-500">{copy}</p>
+              </Rise>
+            ))}
+          </div>
+        </section>
+
+        {/* ========================= WHAT WE CAN BUILD ========================= */}
+
+        <section id="capabilities" className="border-t border-white/[0.08]" data-testid="web3-services-section">
           <div className="mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:px-10 lg:py-28">
             <SectionIntro
               index="01"
-              kicker="Understand"
-              title={["HOW A BLOCKCHAIN", <span className="text-zinc-500">RECORDS A CHANGE</span>]}
-              copy="Four steps from a signed transaction to a permanent entry in a shared ledger. Step through them — the details change from network to network."
-              testId="web3-understand"
+              kicker="What we can build"
+              title={["WHAT ESTROC", <span className="text-zinc-500">CAN BUILD</span>]}
+              copy="Six ways we help businesses put blockchain to work — each starting from a real business problem, not a token."
+              testId="web3-services"
             />
-            <LedgerExplainer />
+            <ServiceCards onDiscuss={discussTopic} />
           </div>
         </section>
 
-        {/* ========================= 03 ECOSYSTEM ========================= */}
-
-        <section id="ecosystem" className="border-t border-white/[0.08]" data-testid="web3-ecosystem-section">
-          <div className="mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:px-10 lg:py-28">
-            <SectionIntro
-              index="02"
-              kicker="Ecosystem"
-              title={["EXPLORE THE", <span className="text-zinc-500">ECOSYSTEM</span>]}
-              copy="The networks, assets and building blocks that make up Web3 — what each one is for, where it is used, and what to watch for."
-              testId="web3-ecosystem"
-            />
-            <EcosystemExplorer />
-          </div>
-        </section>
-
-        {/* ========================= 04 DIGITAL OWNERSHIP ========================= */}
-
-        <section id="digital-ownership" className="border-t border-white/[0.08]" data-testid="web3-ownership-section">
-          <div className="mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:px-10 lg:py-28">
-            <SectionIntro
-              index="03"
-              kicker="NFTs & digital ownership"
-              title={["ONE TOKEN.", <span className="text-zinc-500">ONE RECORD.</span>]}
-              copy="NFTs are not only art. The same idea — a unique token with a public history — can carry a game item, a membership, a ticket or a certificate."
-              testId="web3-ownership"
-            />
-            <AssetShowcase />
-          </div>
-        </section>
-
-        {/* ========================= 05 APPLICATIONS ========================= */}
+        {/* ========================= INDUSTRY APPLICATIONS ========================= */}
 
         <section id="applications" className="border-t border-white/[0.08]" data-testid="web3-applications-section">
           <div className="mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:px-10 lg:py-28">
             <SectionIntro
-              index="04"
-              kicker="Real-world applications"
-              title={["WHERE IT", <span className="text-zinc-500">EARNS ITS PLACE</span>]}
-              copy="Blockchain is useful where several parties need one record that none of them controls alone. Choose an area to see how a system typically works."
+              index="02"
+              kicker="Industry & business applications"
+              title={["WHERE IT", <span className="text-zinc-500">MAKES SENSE</span>]}
+              copy="Choose an industry to see the challenge, a blockchain-based approach, and what ESTROC could develop for it."
               testId="web3-applications"
             />
-            <UseCaseExplorer />
+            <UseCaseExplorer onDiscuss={discussTopic} />
           </div>
         </section>
 
-        <EditorialStatement
-          lines={["A LEDGER IS ONLY", "AS USEFUL AS", <span className="text-zinc-500">THE PRODUCT ON TOP.</span>]}
-          footnote="We build the product — and tell you plainly when a chain isn't needed."
-          testId="web3-editorial-statement"
-        />
+        {/* ========================= CONCEPTS ========================= */}
 
-        {/* ========================= 06 SERVICES ========================= */}
-
-        <section id="web3-services" className="border-t border-white/[0.08]" data-testid="web3-services-section">
+        <section id="concepts" className="border-t border-white/[0.08]" data-testid="web3-concepts-section">
           <div className="mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:px-10 lg:py-28">
             <SectionIntro
-              index="05"
-              kicker="Services"
-              title={["WHAT ESTROC", <span className="text-zinc-500">CAN BUILD</span>]}
-              copy="Each starts from a business problem, not a token. These are the kinds of systems we design and engineer."
-              testId="web3-services"
+              index="03"
+              kicker="Possible solutions"
+              title={["WHAT YOUR PROJECT", <span className="text-zinc-500">COULD LOOK LIKE</span>]}
+              copy="Three hypothetical concepts showing the kind of product a blockchain project can become. Illustrative only — not client work."
+              testId="web3-concepts"
             />
-
-            <div className="mt-12 grid gap-px border border-white/10 bg-white/10 sm:grid-cols-2 xl:grid-cols-4">
-              {web3Services.map((service, index) => (
-                <div key={service.title} className="group relative flex flex-col bg-[#0a0a0b]">
-                  <span className="absolute inset-x-0 top-0 h-px origin-left scale-x-0 bg-[#ff5500] transition-transform duration-500 group-hover:scale-x-100 group-focus-within:scale-x-100" aria-hidden="true" />
-                  {/* Only the contents fade in; the card face stays solid so the grid lines never flash. */}
-                  <Rise delay={(index % 4) * 0.06} className="flex flex-1 flex-col p-6 sm:p-7">
-                  <p className="font-mono text-xs text-zinc-600">{String(index + 1).padStart(2, "0")}</p>
-                  <h3 className="mt-5 text-xl font-semibold leading-tight tracking-[-0.03em] text-zinc-100" data-testid={`web3-service-${index + 1}-title`}>
-                    {service.title}
-                  </h3>
-
-                  <p className="mt-6 text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-600">The problem</p>
-                  <p className="mt-2 text-sm leading-relaxed text-zinc-400">{service.problem}</p>
-
-                  <p className="mt-5 text-[10px] font-mono uppercase tracking-[0.2em] text-[#ff5500]/80">What we build</p>
-                  <p className="mt-2 text-sm leading-relaxed text-zinc-300">{service.build}</p>
-
-                  <button
-                    type="button"
-                    onClick={() => discuss(service.title)}
-                    className={`mt-auto inline-flex items-center gap-2 self-start pt-8 text-sm text-zinc-200 underline-offset-4 transition-colors hover:text-[#ff5500] hover:underline ${focusRing}`}
-                    data-testid={`web3-service-${index + 1}-discuss-button`}
-                  >
-                    Discuss a Project
-                    <ArrowUpRight className="h-4 w-4 text-[#ff5500]" />
-                  </button>
-                  </Rise>
-                </div>
-              ))}
-            </div>
+            <ProjectConcepts onDiscuss={discussTopic} />
           </div>
         </section>
 
-        {/* ========================= 07 BUILD WITH ESTROC ========================= */}
+        {/* ========================= FINAL CTA ========================= */}
 
-        <section id="build-with-estroc" className="border-t border-white/[0.08] bg-[#0d0d0f]" data-testid="web3-build-section">
+        {/* The enquiry form lives once, on the homepage; this hands the visitor to it. */}
+        <section id="web3-final-cta" className="border-t border-white/[0.08]" data-testid="web3-final-cta-section">
           <div className="mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:px-10 lg:py-28">
-            <p className="text-[10px] font-mono uppercase tracking-[0.22em] text-[#ff5500]">06 / Build with ESTROC</p>
-            <MaskLines
-              as="h2"
-              lines={["FROM BLOCKCHAIN IDEAS", <span className="text-zinc-500">TO WORKING PRODUCTS.</span>]}
-              className="mt-4 max-w-5xl text-[clamp(2.4rem,5.6vw,5rem)] font-semibold leading-[1.02] tracking-[-0.06em] text-zinc-100"
-              testId="web3-build-heading"
-            />
-
-            <ol className="mt-14 grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 lg:grid-cols-6 lg:gap-x-0" data-testid="web3-process">
-              {web3Process.map(([stage, copy], index) => (
-                <li key={stage} className="relative lg:pr-6">
-                  <Rise delay={index * 0.07}>
-                    <div className="flex items-center gap-3">
-                      <span className="h-[11px] w-[11px] shrink-0 rounded-full bg-[#ff5500] shadow-[0_0_14px_rgba(255,85,0,0.45)]" aria-hidden="true" />
-                      <span className="h-px flex-1 bg-white/10" aria-hidden="true" />
-                      <ArrowRight className={`hidden h-3.5 w-3.5 lg:block ${index < web3Process.length - 1 ? "text-zinc-700" : "invisible"}`} aria-hidden="true" />
-                    </div>
-                    <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.22em] text-zinc-600">{String(index + 1).padStart(2, "0")}</p>
-                    <h3 className="mt-1 text-2xl font-semibold tracking-[-0.04em] text-zinc-100">{stage}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-zinc-500">{copy}</p>
-                  </Rise>
-                </li>
-              ))}
-            </ol>
-
-            <Rise delay={0.15} className="mt-14">
-              <Button
-                type="button"
-                onClick={() => discuss()}
-                className="h-auto px-6 py-4 text-sm tracking-[0.06em] whitespace-normal"
-                data-testid="web3-discuss-project-button"
-              >
-                LET'S DISCUSS YOUR BLOCKCHAIN PROJECT
-                <ArrowUpRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Rise>
-          </div>
-        </section>
-
-        {/* ========================= FINAL CTA + ENQUIRY ========================= */}
-
-        <section id="start-a-project" className="border-t border-white/[0.08]" data-testid="start-project-section">
-          <div className="mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:px-10 lg:py-28">
-            <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+            <div className="grid gap-12 lg:grid-cols-[1.3fr_0.7fr] lg:items-end lg:gap-20">
               <div>
                 <MaskLines
                   as="h2"
-                  lines={["READY TO BUILD", <span className="text-zinc-500">WHAT'S NEXT?</span>]}
-                  className="text-5xl font-semibold tracking-[-0.065em] text-zinc-100 sm:text-7xl"
+                  lines={["HAVE A BLOCKCHAIN IDEA?", <span className="text-zinc-500">LET'S BUILD THE</span>, <span className="text-zinc-500">RIGHT SOLUTION.</span>]}
+                  className="text-4xl font-semibold leading-[1.02] tracking-[-0.06em] text-zinc-100 sm:text-6xl"
                   testId="web3-final-heading"
                 />
                 <Rise delay={0.12}>
-                  <p className="mt-5 max-w-md text-lg leading-relaxed text-zinc-500">
-                    Tell us about the product, the people who will use it and the problem it solves. We'll come back with an honest view on the right technology.
+                  <p className="mt-6 max-w-lg text-lg leading-relaxed text-zinc-500">
+                    Tell us what you want to achieve. ESTROC can help evaluate the use case, define the scope and plan a practical development approach.
                   </p>
                 </Rise>
-
-                <Rise delay={0.2} className="mt-10 border-t border-white/10 pt-4" testId="web3-contact-details">
-                  <p className="text-[10px] font-mono uppercase tracking-[0.22em] text-zinc-600">Or reach us directly</p>
-                  <CopyEmail />
+                <Rise delay={0.18} className="mt-8">
+                  <Button type="button" size="lg" onClick={() => enquire()} className="px-4" data-testid="web3-final-discuss-button">
+                    Discuss a Project
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
                 </Rise>
               </div>
 
-              <ProjectForm prefill={prefill} />
+              <Rise delay={0.24} className="border-t border-white/10 pt-4" testId="web3-contact-details">
+                <p className="text-[10px] font-mono uppercase tracking-[0.22em] text-zinc-600">Or reach us directly</p>
+                <CopyEmail />
+              </Rise>
             </div>
           </div>
         </section>
@@ -315,9 +224,8 @@ export default function BlockchainWeb3() {
           <div className="mx-auto flex max-w-7xl gap-4 px-5 py-8 sm:px-8 lg:px-10">
             <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-[#ff5500]" aria-hidden="true" />
             <p className="max-w-4xl text-xs leading-relaxed text-zinc-500">
-              This page is an educational overview, not financial, investment or legal advice. Token IDs, addresses, blocks and ownership
-              histories shown here are fictional demonstration data. Nothing on this page connects to a wallet, asks for private keys or
-              initiates a transaction.
+              The services, examples and concepts on this page describe what ESTROC can develop; they are not completed client projects.
+              Nothing here is financial, investment or legal advice, and this page does not connect to wallets or request private keys.
             </p>
           </div>
         </aside>

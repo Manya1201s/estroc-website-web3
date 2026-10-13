@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowDown,
   ArrowRight,
@@ -6,7 +6,7 @@ import {
   Boxes,
   Check,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
   AnimatePresence,
   motion,
@@ -29,6 +29,7 @@ import SectionHeading from "@/components/estroc/SectionHeading";
 import ServicesMarquee from "@/components/estroc/ServicesMarquee";
 import Testimonials from "@/components/estroc/Testimonials";
 import { BLOCKCHAIN_ROUTE, SiteFooter, SiteHeader } from "@/components/estroc/SiteChrome";
+import type { EnquiryNavState } from "@/components/estroc/SiteChrome";
 import WorkSection from "@/components/estroc/WorkSection";
 import { buildCategories } from "@/lib/services";
 import { useScrollTo } from "@/lib/smoothScroll";
@@ -98,6 +99,15 @@ export default function Home() {
   const ctaRef = useRef<HTMLElement>(null);
 
   const scrollToId = useScrollTo();
+
+  // Another page can send the visitor here with the form pre-selected (useOpenEnquiry).
+  const location = useLocation();
+  const sentPrefill = (location.state as EnquiryNavState | null)?.enquiryPrefill;
+  // Keyed on the history entry, so each arrival applies its prefill exactly once.
+  const enquiryPrefill = useMemo(
+    () => (sentPrefill ? { ...sentPrefill, key: Date.now() } : undefined),
+    [location.key],
+  );
 
   const { scrollYProgress: heroProgress } = useScroll({
     target: heroRef,
@@ -625,7 +635,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <ProjectForm />
+              <ProjectForm prefill={enquiryPrefill} />
             </div>
           </div>
         </section>

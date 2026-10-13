@@ -3,22 +3,22 @@ import type { MotionValue } from "motion/react";
 import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "motion/react";
 
 /**
- * The hero ledger: five committed blocks linked by fine orange hashes, and a
- * sixth still forming. Layers drift at different depths with the pointer and
- * the scroll, so the chain reads as an object in space rather than a diagram.
- * The block numbers and hashes are invented — this illustrates a ledger, it
- * does not read one.
+ * The hero: a blockchain application drawn as connected parts — ledger,
+ * contracts, APIs, dashboard and the app people use — linked by fine orange
+ * lines, with a new module being added. Layers drift at different depths with
+ * the pointer and the scroll, so it reads as an object in space rather than a
+ * diagram. It illustrates an architecture; it is not a live system.
  */
 
 const W = 120;
 const H = 84;
 
-const blocks: { x: number; y: number; height: string; prev: string; txs: number }[] = [
-  { x: 24, y: 352, height: "18,200", prev: "0x00a1…", txs: 4 },
-  { x: 118, y: 214, height: "18,201", prev: "0x9f3c…", txs: 6 },
-  { x: 246, y: 300, height: "18,202", prev: "0x41be…", txs: 3 },
-  { x: 318, y: 138, height: "18,203", prev: "0xc07d…", txs: 5 },
-  { x: 424, y: 262, height: "18,204", prev: "0x7e12…", txs: 7 },
+const blocks: { x: number; y: number; title: string; sub: string; txs: number }[] = [
+  { x: 24, y: 352, title: "LEDGER", sub: "verified records", txs: 4 },
+  { x: 118, y: 214, title: "SMART CONTRACT", sub: "business rules", txs: 6 },
+  { x: 246, y: 300, title: "API LAYER", sub: "integrations", txs: 3 },
+  { x: 318, y: 138, title: "DASHBOARD", sub: "admin & reports", txs: 5 },
+  { x: 424, y: 262, title: "WEB APP", sub: "your users", txs: 7 },
 ];
 const pending = { x: 432, y: 30 };
 
@@ -69,7 +69,7 @@ export default function ChainVisual({ scrollProgress }: { scrollProgress?: Motio
         viewBox="0 0 580 520"
         className="h-auto w-full overflow-visible"
         role="img"
-        aria-label="Illustration: five linked blocks forming a ledger, with a sixth block forming, surrounded by network peers"
+        aria-label="Illustration: a blockchain application as connected components — ledger, smart contract, API layer, dashboard and web app — with a new module being added"
       >
         <defs>
           <pattern id="w3-dots" width="22" height="22" patternUnits="userSpaceOnUse">
@@ -108,7 +108,7 @@ export default function ChainVisual({ scrollProgress }: { scrollProgress?: Motio
             const latest = index === blocks.length - 1;
             return (
               <motion.g
-                key={block.height}
+                key={block.title}
                 initial={reducedMotion ? false : { opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.25 + index * 0.12, ease: [0.16, 1, 0.3, 1] }}
@@ -123,11 +123,11 @@ export default function ChainVisual({ scrollProgress }: { scrollProgress?: Motio
                   stroke={latest ? "#ff5500" : "currentColor"}
                   strokeWidth={latest ? 1.4 : 1}
                 />
-                <text x={block.x + 12} y={block.y + 22} className={`font-mono ${latest ? "text-zinc-100" : "text-zinc-400"}`} fill="currentColor" fontSize="11" letterSpacing="0.6">
-                  BLOCK {block.height}
+                <text x={block.x + 12} y={block.y + 22} className={`font-mono ${latest ? "text-zinc-100" : "text-zinc-400"}`} fill="currentColor" fontSize="10" letterSpacing="0.6">
+                  {block.title}
                 </text>
-                <text x={block.x + 12} y={block.y + 40} className="font-mono text-zinc-600" fill="currentColor" fontSize="9" letterSpacing="0.5">
-                  PREV {block.prev}
+                <text x={block.x + 12} y={block.y + 40} className="font-mono text-zinc-600" fill="currentColor" fontSize="9" letterSpacing="0.3">
+                  {block.sub}
                 </text>
                 {Array.from({ length: block.txs }, (_, tx) => (
                   <rect
@@ -160,10 +160,10 @@ export default function ChainVisual({ scrollProgress }: { scrollProgress?: Motio
           />
           <rect x={pending.x} y={pending.y} width={W} height={H} rx="6" className="w3-block text-zinc-500" stroke="currentColor" strokeDasharray="4 4" />
           <text x={pending.x + 12} y={pending.y + 22} className="font-mono text-zinc-400" fill="currentColor" fontSize="11" letterSpacing="0.6">
-            BLOCK 18,205
+            NEW MODULE
           </text>
           <text x={pending.x + 12} y={pending.y + 40} className="font-mono text-[#ff5500]" fill="currentColor" fontSize="9" letterSpacing="0.5">
-            FORMING…
+            IN DEVELOPMENT…
           </text>
           {[0, 1, 2].map((tx) => (
             <rect

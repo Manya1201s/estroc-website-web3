@@ -45,17 +45,26 @@ export function useLenis() {
   return useContext(LenisContext);
 }
 
+/** Height of the fixed site header; anchored sections land just below it. */
+export const HEADER_OFFSET = 72;
+
+/** `immediate` jumps without animating — used when arriving from another page. */
 export function useScrollTo() {
   const lenis = useContext(LenisContext);
 
-  return (id: string) => {
+  return (id: string, { immediate = false }: { immediate?: boolean } = {}) => {
     const target = document.getElementById(id);
     if (!target) return;
     if (lenis) {
       // Clear the fixed 72px header so anchored headings are not tucked under it.
-      lenis.scrollTo(target, { offset: -72 });
+      lenis.scrollTo(target, { offset: -HEADER_OFFSET, immediate, force: immediate });
       return;
     }
-    target.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    // "instant" rather than "auto": the stylesheet sets scroll-behavior: smooth on <html>.
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({
+      top: target.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET,
+      behavior: immediate || reduced ? "instant" : "smooth",
+    });
   };
 }
