@@ -21,7 +21,8 @@ const FRICTION = 1300;
 const STOMP_VY = 260;
 const PW = 12;
 const PH = 20;
-const COIN_R = 6;
+/** Coin radius in logical px: drawn size and pickup box both use it. */
+const COIN_R = 13;
 const COIN_LIFE = 10;
 const COIN_GRAVITY = 1100;
 const MAX_COINS = 60;
@@ -255,8 +256,8 @@ function destroy(g: Game, t: Target, how: "bump" | "stomp" | "punch") {
     g.coins.push({
       x: cx,
       y: cy,
-      vx: (i - (COINS_PER_TARGET - 1) / 2) * 34 + rand(-10, 10) + push * 0.3,
-      vy: -rand(250, 330),
+      vx: (i - (COINS_PER_TARGET - 1) / 2) * 46 + rand(-10, 10) + push * 0.3,
+      vy: -rand(290, 360),
       age: 0,
       phase: rand(0, Math.PI),
       resting: false,
@@ -277,7 +278,7 @@ function collect(g: Game, c: Coin) {
     g.pickup.popup.age = Math.min(g.pickup.popup.age, 0.15);
     g.pickup.popup.x = c.x;
   } else {
-    const popup = { x: c.x, y: c.y - 10, text: "+1 BTC COIN", age: 0 };
+    const popup = { x: c.x, y: c.y - COIN_R - 4, text: "+1 BTC COIN", age: 0 };
     g.popups.push(popup);
     g.pickup = { n: 1, t: g.t, popup };
   }
@@ -451,7 +452,7 @@ export function step(g: Game, input: Input, dt: number, viewW: number) {
     // A short magnet makes touching a coin feel generous.
     const dx = pcx - c.x;
     const dy = pcy - c.y;
-    if (c.age > 0.3 && Math.hypot(dx, dy) < 24) {
+    if (c.age > 0.3 && Math.hypot(dx, dy) < COIN_R + 20) {
       c.x += dx * Math.min(1, dt * 10);
       c.y += dy * Math.min(1, dt * 10);
     }
@@ -518,34 +519,59 @@ export function step(g: Game, input: Input, dt: number, viewW: number) {
 
 /* ------------------------------------------------------------------ render */
 
-/** Gold ₿ coin drawn once as pixel art with a soft glow; frames just scale it. */
-export function makeCoinSprite(): HTMLCanvasElement {
-  const S = 4;
-  const size = 20;
-  const c = document.createElement("canvas");
-  c.width = c.height = size * S;
-  const x = c.getContext("2d")!;
-  const glow = x.createRadialGradient(10 * S, 10 * S, 3 * S, 10 * S, 10 * S, 10 * S);
-  glow.addColorStop(0, "rgba(255,190,40,0.45)");
-  glow.addColorStop(1, "rgba(255,190,40,0)");
-  x.fillStyle = glow;
-  x.fillRect(0, 0, size * S, size * S);
-  const px = (i: number, j: number, color: string) => {
-    x.fillStyle = color;
-    x.fillRect((4 + i) * S, (4 + j) * S, S, S);
-  };
-  for (let j = 0; j < 12; j++) {
-    for (let i = 0; i < 12; i++) {
-      const dx = i + 0.5 - 6;
-      const dy = j + 0.5 - 6;
-      const d = Math.hypot(dx, dy);
-      if (d > 6) continue;
-      px(i, j, d > 5 ? "#8a5a00" : d > 4.2 ? "#d99a00" : dx + dy < -3.5 ? "#ffe58a" : GOLD);
+/** Coin art, drawn at the canvas's exact device-pixel size so every art pixel stays square. */
+export interface CoinArt {
+  scale: number;
+  coin: HTMLCanvasElement;
+  glow: HTMLCanvasElement;
+}
+
+/** Coin face on a 13 × 13 pixel grid: rim, lit and shaded ring, face, and a bold two-pixel ₿. */
+const COIN_GRID = 13;
+const COIN_SYMBOL = ["..#.#..", "######.", ".##..##", ".##..##", ".#####.", ".##..##", ".##..##", "######.", "..#.#.."];
+const GLOW_D = 52; // logical diameter of the halo behind each coin
+
+function coinPixel(i: number, j: number): string | null {
+  const dx = i + 0.5 - COIN_GRID / 2;
+  const dy = j + 0.5 - COIN_GRID / 2;
+  const d = Math.hypot(dx, dy);
+  if (d > COIN_GRID / 2) return null;
+  const symbol = COIN_SYMBOL[j - 2]?.[i - 3] === "#";
+  if (symbol) return "#5a2e00";
+  if (d > 5.6) return "#7a4800"; // dark outer rim
+  if (d > 4.6) return dx + dy < 0 ? "#ffe066" : "#c98600"; // ring: lit top-left, shaded bottom-right
+  if (dx + dy < -4.5) return "#fff1b0"; // highlight
+  if (dx + dy > 5) return "#eaa300";
+  return GOLD;
+}
+
+/** Gold ₿ coin and its halo, rebuilt only when the canvas scale changes. */
+export function makeCoinArt(scale: number): CoinArt {
+  const size = Math.max(COIN_GRID, Math.round(COIN_R * 2 * scale));
+  const coin = document.createElement("canvas");
+  coin.width = coin.height = size;
+  const x = coin.getContext("2d")!;
+  const edge = (k: number) => Math.round((k * size) / COIN_GRID);
+  for (let j = 0; j < COIN_GRID; j++) {
+    for (let i = 0; i < COIN_GRID; i++) {
+      const color = coinPixel(i, j);
+      if (!color) continue;
+      x.fillStyle = color;
+      x.fillRect(edge(i), edge(j), edge(i + 1) - edge(i), edge(j + 1) - edge(j));
     }
   }
-  const B = [".#.#..", "#####.", ".#...#", ".####.", ".#...#", "#####.", ".#.#.."];
-  B.forEach((row, j) => [...row].forEach((ch, i) => ch === "#" && px(3 + i, 2.5 + j, "#7a4300")));
-  return c;
+
+  const g = Math.round(GLOW_D * scale);
+  const glow = document.createElement("canvas");
+  glow.width = glow.height = g;
+  const y = glow.getContext("2d")!;
+  const halo = y.createRadialGradient(g / 2, g / 2, g * 0.16, g / 2, g / 2, g / 2);
+  halo.addColorStop(0, "rgba(255,205,70,0.6)");
+  halo.addColorStop(0.45, "rgba(255,170,30,0.22)");
+  halo.addColorStop(1, "rgba(255,150,0,0)");
+  y.fillStyle = halo;
+  y.fillRect(0, 0, g, g);
+  return { scale, coin, glow };
 }
 
 function drawPlayer(ctx: CanvasRenderingContext2D, g: Game) {
@@ -579,7 +605,7 @@ function drawPlayer(ctx: CanvasRenderingContext2D, g: Game) {
   }
 }
 
-export function render(ctx: CanvasRenderingContext2D, g: Game, viewW: number, scale: number, coin: HTMLCanvasElement) {
+export function render(ctx: CanvasRenderingContext2D, g: Game, viewW: number, scale: number, art: CoinArt) {
   ctx.setTransform(scale, 0, 0, scale, 0, 0);
   ctx.imageSmoothingEnabled = false;
   ctx.fillStyle = "#0b0b0d";
@@ -657,13 +683,24 @@ export function render(ctx: CanvasRenderingContext2D, g: Game, viewW: number, sc
   }
   ctx.lineWidth = 1;
 
-  // Coins: a pre-drawn sprite squeezed horizontally to spin.
+  // Coins: a steady halo, then the face squeezed horizontally to spin. The
+  // drawn face is exactly 2 × COIN_R across, the same box used for pickup.
+  const snap = (v: number) => Math.round(v * scale) / scale;
+  const D = COIN_R * 2;
   for (const c of g.coins) {
-    if (c.x < left - 10 || c.x > right + 10) continue;
+    if (c.x < left - GLOW_D || c.x > right + GLOW_D) continue;
     if (c.age > COIN_LIFE - 2.5 && Math.floor(c.age * 8) % 2) continue;
-    const squeeze = g.reduced ? 1 : Math.max(0.18, Math.abs(Math.cos(c.phase)));
-    const w = 20 * squeeze;
-    ctx.drawImage(coin, Math.round(c.x - w / 2), Math.round(c.y - 10), Math.max(4, Math.round(w)), 20);
+    ctx.globalAlpha = g.reduced ? 0.8 : 0.72 + 0.18 * Math.sin(g.t * 5 + c.phase);
+    ctx.drawImage(art.glow, snap(c.x - GLOW_D / 2), snap(c.y - GLOW_D / 2), GLOW_D, GLOW_D);
+    ctx.globalAlpha = 1;
+    const squeeze = g.reduced ? 1 : Math.max(0.16, Math.abs(Math.cos(c.phase)));
+    const w = Math.max(3, snap(D * squeeze));
+    ctx.drawImage(art.coin, snap(c.x - w / 2), snap(c.y - COIN_R), w, D);
+    if (squeeze < 0.4) {
+      // Edge-on: a bright rim line keeps the coin solid while it turns.
+      ctx.fillStyle = "#ffe066";
+      ctx.fillRect(snap(c.x - 1), snap(c.y - COIN_R + 2), 2, D - 4);
+    }
   }
 
   drawPlayer(ctx, g);
@@ -710,7 +747,10 @@ export function render(ctx: CanvasRenderingContext2D, g: Game, viewW: number, sc
   ctx.font = `bold 10px ${MONO}`;
   ctx.fillStyle = "#f5f5f7";
   ctx.fillText(String(g.score).padStart(3, "0"), viewW - 10, 15);
-  ctx.drawImage(coin, viewW - 50, 5, 20, 20);
+  // The counter icon stays small: smoothing keeps the downscaled ₿ even.
+  ctx.imageSmoothingEnabled = true;
+  ctx.drawImage(art.coin, viewW - 47, 8, 14, 14);
+  ctx.imageSmoothingEnabled = false;
   if (g.banner) {
     const a = Math.min(1, (1.6 - g.banner.age) / 0.4, g.banner.age / 0.15);
     ctx.globalAlpha = Math.max(0, a);

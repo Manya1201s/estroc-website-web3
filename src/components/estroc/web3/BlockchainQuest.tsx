@@ -4,8 +4,8 @@ import { ArrowLeft, ArrowRight, ArrowUp, Gamepad2, MonitorPlay, RotateCcw, Zap }
 import { useReducedMotion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { focusRing } from "./shared";
-import { H, STEP, aliveTargets, createGame, demoInput, makeCoinSprite, noInput, render, step } from "./questEngine";
-import type { Game, Input } from "./questEngine";
+import { H, STEP, aliveTargets, createGame, demoInput, makeCoinArt, noInput, render, step } from "./questEngine";
+import type { CoinArt, Game, Input } from "./questEngine";
 
 /**
  * ESTROC Blockchain Quest: a small canvas platformer that sits in its own
@@ -83,7 +83,6 @@ export default function BlockchainQuest() {
     const canvas = canvasRef.current!;
     const wrap = wrapRef.current!;
     const ctx = canvas.getContext("2d")!;
-    const coin = makeCoinSprite();
     const game = createGame(reducedMotion);
     gameRef.current = game;
 
@@ -94,6 +93,7 @@ export default function BlockchainQuest() {
     let scale = 1;
     let viewW = 480;
     let shown = "";
+    let art: CoinArt = makeCoinArt(1);
 
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
@@ -102,6 +102,7 @@ export default function BlockchainQuest() {
       canvas.height = Math.max(1, Math.round(rect.height * dpr));
       scale = canvas.height / H;
       viewW = canvas.width / scale;
+      if (art.scale !== scale) art = makeCoinArt(scale);
     };
 
     /** Mirror the counters to the DOM (score readout + data attributes for tests). */
@@ -121,7 +122,7 @@ export default function BlockchainQuest() {
     };
 
     const draw = () => {
-      render(ctx, gameRef.current!, viewW, scale, coin);
+      render(ctx, gameRef.current!, viewW, scale, art);
       sync();
     };
 

@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowRight, ArrowUpRight, Pause, Play } from "lucide-react";
 import { useReducedMotion } from "motion/react";
 import SectionHeading from "./SectionHeading";
 import { projects, testId as slug } from "@/lib/projects";
+import type { Project } from "@/lib/projects";
 
 /**
  * The portfolio as a continuous orbit. Every project sits on one elliptical
@@ -49,6 +50,23 @@ function orbitFor(width: number, layout: Layout): Orbit {
 /** Index of the card nearest the front for a given orbit angle. */
 const frontOf = (phase: number) => (((Math.round(-phase / SLOT) % n) + n) % n);
 const host = (url: string) => url.replace(/^https?:\/\//, "").replace(/\/$/, "");
+
+/**
+ * The project's URL only if it is a valid http(s) address on its own domain.
+ * Vercel deployment hosts (*.vercel.app) are previews, not official sites, so
+ * they never produce a "View Project" link.
+ */
+function officialUrl(project: Project): string | undefined {
+  if (!project.url) return undefined;
+  try {
+    const { protocol, hostname } = new URL(project.url);
+    if (protocol !== "https:" && protocol !== "http:") return undefined;
+    if (hostname === "vercel.app" || hostname.endsWith(".vercel.app")) return undefined;
+    return project.url;
+  } catch {
+    return undefined;
+  }
+}
 const focusRing = "outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff5500]";
 
 export default function WorkSection() {
@@ -265,7 +283,7 @@ export default function WorkSection() {
                       <span className={`h-1.5 w-1.5 rounded-full ${isFront ? "bg-[#ff5500]" : "bg-white/15"}`} />
                     </span>
                     <span className="truncate text-[11px] font-semibold tracking-tight text-zinc-200">{item.name}</span>
-                    <span className="ml-auto hidden truncate font-mono text-[9px] text-zinc-600 sm:block">{host(item.url)}</span>
+                    {officialUrl(item) && <span className="ml-auto hidden truncate font-mono text-[9px] text-zinc-600 sm:block">{host(officialUrl(item)!)}</span>}
                   </span>
                   <span className="relative block overflow-hidden bg-[#111113]" style={{ aspectRatio: `${RATIO} / 1` }}>
                     <img src={item.preview} alt="" draggable={false} decoding="async" className="absolute inset-0 h-full w-full object-cover object-top" />
@@ -299,9 +317,10 @@ export default function WorkSection() {
                     <p className="mt-3 max-w-2xl text-sm leading-relaxed text-zinc-400 sm:text-base" data-testid={selected ? "selected-project-preview-description" : undefined}>
                       {item.description}
                     </p>
-                    {item.url && (
+                    {/* Only a confirmed official URL gets a button; otherwise there is no link at all. */}
+                    {officialUrl(item) && (
                       <a
-                        href={item.url}
+                        href={officialUrl(item)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className={`mt-5 inline-flex items-center gap-2 border border-[#ff5500] px-5 py-3 text-sm font-medium text-[#ff5500] transition-colors hover:bg-[#ff5500] hover:text-[#0a0a0b] ${focusRing}`}

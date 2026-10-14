@@ -4,8 +4,12 @@ export interface Project {
   slug: string;
   category: string;
   description: string;
-  /** Public, frameable product URL, live in the work section's preview box. */
-  url: string;
+  /**
+   * Official public URL for "View Project". Leave it out until the real
+   * domain is confirmed; without one (or with a *.vercel.app preview URL) the
+   * work section shows no "View Project" button.
+   */
+  url?: string;
   /**
    * Screenshot shown in the preview box while the live site loads, captured at
    * the box's 1.15:1 ratio and roughly its width.
@@ -43,7 +47,6 @@ export const projects: Project[] = [
     slug: "rave-lux",
     category: "LUXURY E-COMMERCE / DIGITAL PRODUCT",
     description: "A members-only luxury storefront for eyewear and fine goods, built around curated collections and concierge enquiries.",
-    url: "https://ravelux-app.vercel.app/",
     preview: "/work/rave-lux.webp",
     summary: [
       "members-only luxury e-commerce platform",
@@ -58,7 +61,6 @@ export const projects: Project[] = [
     slug: "newagenaukri",
     category: "JOB / RECRUITMENT PLATFORM",
     description: "An AI-powered hiring platform that matches candidates to roles, for job seekers and recruiters alike.",
-    url: "https://newagenaukri.vercel.app/",
     preview: "/work/newagenaukri.webp",
     summary: [
       "ai job matching for talent & roles",
@@ -73,7 +75,6 @@ export const projects: Project[] = [
     slug: "cyber-vault",
     category: "SECURITY / ENCRYPTED VAULT",
     description: "A local-first vault that keeps credentials and files encrypted on your own devices, unlocked by biometrics and synced without a server.",
-    url: "https://cyber-vault.vercel.app/",
     preview: "/work/cyber-vault.webp",
     summary: [
       "local-first vault, nothing in the cloud",
@@ -88,7 +89,6 @@ export const projects: Project[] = [
     slug: "trustlens",
     category: "AI / DOCUMENT INTELLIGENCE",
     description: "An AI co-pilot that explains legal documents in plain language, verifies sources and flags misinformation.",
-    url: "https://trust-lens-one.vercel.app/",
     preview: "/work/trustlens.webp",
     summary: [
       "ai co-pilot for complex legal documents",
@@ -96,6 +96,20 @@ export const projects: Project[] = [
       "source verification with trust scores",
       "misinformation detection & flagging",
       "educational legal resources",
+    ],
+  },
+  {
+    name: "SPONTII",
+    slug: "spontii",
+    category: "SOCIAL / LOCAL PLANS APP",
+    description: "A social app for spontaneous plans: find public activities and people nearby, browse by mood, and post a quick plan or a full one that others request to join.",
+    preview: "/work/spontii.webp",
+    summary: [
+      "real people, real plans, right nearby",
+      "browse public plans by mood or city",
+      "quick drop or full plan creation",
+      "join requests approved by the host",
+      "verified profiles, approximate location",
     ],
   },
 ];
