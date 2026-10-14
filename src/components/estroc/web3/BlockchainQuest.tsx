@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { KeyboardEvent, PointerEvent as ReactPointerEvent } from "react";
-import { ArrowLeft, ArrowRight, ArrowUp, Gamepad2, MonitorPlay, RotateCcw, Zap } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUp, Gamepad2, MonitorPlay, Pause, Play, RotateCcw, Zap } from "lucide-react";
 import { useReducedMotion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { focusRing } from "./shared";
@@ -56,6 +56,7 @@ export default function BlockchainQuest() {
   const reducedMotion = !!useReducedMotion();
   const showPad = useTouchPad();
   const [mode, setModeState] = useState<Mode>(reducedMotion ? "idle" : "demo");
+  const [paused, setPausedState] = useState(false);
 
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -66,10 +67,20 @@ export default function BlockchainQuest() {
   const tapsRef = useRef({ jump: false, hit: false });
   const lastInputRef = useRef(0);
   const wakeRef = useRef<() => void>(() => {});
+  /** Set by the visitor; the loop stays stopped until they resume, even when scrolled back into view. */
+  const pausedRef = useRef(false);
 
   const setMode = useCallback((next: Mode) => {
     modeRef.current = next;
     setModeState(next);
+    wakeRef.current();
+  }, []);
+
+  const setPaused = useCallback((next: boolean) => {
+    pausedRef.current = next;
+    setPausedState(next);
+    // Time spent paused does not count as idle time in manual play.
+    if (!next) lastInputRef.current = performance.now();
     wakeRef.current();
   }, []);
 
@@ -126,7 +137,7 @@ export default function BlockchainQuest() {
       sync();
     };
 
-    const running = () => inView && !document.hidden && modeRef.current !== "idle";
+    const running = () => inView && !document.hidden && modeRef.current !== "idle" && !pausedRef.current;
 
     const frame = (now: number) => {
       raf = 0;
@@ -206,7 +217,8 @@ export default function BlockchainQuest() {
 
   const onKey = (event: KeyboardEvent<HTMLDivElement>, down: boolean) => {
     const key = KEYS[event.code];
-    if (!key) return;
+    // While paused, game keys do nothing (and the page scrolls as usual).
+    if (!key || pausedRef.current) return;
     event.preventDefault();
     if (down) takeControl();
     press(key, down);
@@ -217,10 +229,12 @@ export default function BlockchainQuest() {
     gameRef.current = g;
     keysRef.current = { ...noInput };
     tapsRef.current = { jump: false, hit: false };
+    if (pausedRef.current) setPaused(false);
     wakeRef.current();
   };
 
   const play = () => {
+    if (pausedRef.current) setPaused(false);
     takeControl();
     wrapRef.current?.focus({ preventScroll: true });
   };
@@ -228,6 +242,7 @@ export default function BlockchainQuest() {
   const padHandlers = (key: keyof Input) => ({
     onPointerDown: (event: ReactPointerEvent<HTMLButtonElement>) => {
       event.preventDefault();
+      if (pausedRef.current) return;
       event.currentTarget.setPointerCapture?.(event.pointerId);
       takeControl();
       press(key, true);
@@ -238,7 +253,7 @@ export default function BlockchainQuest() {
     onContextMenu: (event: { preventDefault: () => void }) => event.preventDefault(),
   });
 
-  const status = mode === "play" ? "Playing" : mode === "demo" ? "Auto demo" : "Ready";
+  const status = paused ? "Paused" : mode === "play" ? "Playing" : mode === "demo" ? "Auto demo" : "Ready";
 
   return (
     <div
@@ -249,7 +264,7 @@ export default function BlockchainQuest() {
       <div className="flex shrink-0 flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b border-white/10 px-3 py-2 sm:px-4">
         <div className="flex items-center gap-4">
           <p className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-zinc-400" role="status" data-testid="quest-status">
-            <span className={`h-1.5 w-1.5 rounded-full ${mode === "play" ? "bg-[#ff5500]" : "bg-white/15"}`} aria-hidden="true" />
+            <span className={`h-1.5 w-1.5 rounded-full ${mode === "play" && !paused ? "bg-[#ff5500]" : "bg-white/15"}`} aria-hidden="true" />
             {status}
           </p>
           <p className="hidden font-mono text-[10px] uppercase tracking-[0.16em] text-zinc-600 lg:block">
@@ -261,7 +276,10 @@ export default function BlockchainQuest() {
             Coins <span ref={scoreRef} className="ml-1 text-sm font-semibold text-zinc-100" data-testid="quest-score">0</span>
           </p>
           {mode === "play" ? (
-            <Button type="button" size="sm" variant="outline" onClick={() => setMode(reducedMotion ? "idle" : "demo")} disabled={reducedMotion} data-testid="quest-demo-button">
+            <Button type="button" size="sm" variant="outline" onClick={() => {
+                if (pausedRef.current) setPaused(false);
+                setMode(reducedMotion ? "idle" : "demo");
+              }} disabled={reducedMotion} data-testid="quest-demo-button">
               <MonitorPlay className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
               Demo
             </Button>
@@ -269,6 +287,20 @@ export default function BlockchainQuest() {
             <Button type="button" size="sm" onClick={play} data-testid="quest-play-button">
               <Gamepad2 className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
               Play
+            </Button>
+          )}
+          {mode !== "idle" && (
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              onClick={() => setPaused(!paused)}
+              aria-pressed={paused}
+              aria-label={paused ? "Resume" : "Pause"}
+              data-testid="quest-pause-button"
+            >
+              {paused ? <Play className="h-3.5 w-3.5 sm:mr-1.5" aria-hidden="true" /> : <Pause className="h-3.5 w-3.5 sm:mr-1.5" aria-hidden="true" />}
+              <span className="hidden sm:inline">{paused ? "Resume" : "Pause"}</span>
             </Button>
           )}
           <Button type="button" size="sm" variant="outline" onClick={restart} aria-label="Restart" data-testid="quest-restart-button">
@@ -288,18 +320,19 @@ export default function BlockchainQuest() {
         onKeyUp={(event) => onKey(event, false)}
         onBlur={() => (keysRef.current = { ...noInput })}
         onPointerDown={() => {
-          if (modeRef.current !== "play") play();
+          if (modeRef.current !== "play" && !pausedRef.current) play();
         }}
         data-mode={mode}
+        data-paused={paused || undefined}
         className={`relative h-[clamp(210px,38svh,300px)] w-full touch-manipulation overflow-hidden bg-[#0b0b0d] md:h-auto md:min-h-0 md:flex-1 ${focusRing} focus-visible:outline-offset-[-2px]`}
         data-testid="quest-game"
       >
         <canvas ref={canvasRef} className="absolute inset-0 h-full w-full [image-rendering:pixelated]" aria-hidden="true" />
-        {mode !== "play" && (
+        {(mode !== "play" || paused) && (
           <div className="pointer-events-none absolute inset-x-0 bottom-1.5 flex justify-center px-3 sm:bottom-3">
             {/* Sits on the game screen, which stays dark in both themes. */}
             <span className="border border-[rgba(255,255,255,0.15)] bg-[rgba(10,10,11,0.8)] px-2 py-1 text-center font-mono text-[9px] uppercase tracking-[0.14em] text-[#d4d4d8] sm:px-3 sm:py-1.5 sm:text-[10px] sm:tracking-[0.18em]">
-              {mode === "demo" ? "Auto demo · press a key or tap to play" : "Press Play to start"}
+              {paused ? "Paused · press Resume to continue" : mode === "demo" ? "Auto demo · press a key or tap to play" : "Press Play to start"}
             </span>
           </div>
         )}

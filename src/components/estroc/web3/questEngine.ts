@@ -22,7 +22,7 @@ const STOMP_VY = 260;
 const PW = 12;
 const PH = 20;
 /** Coin radius in logical px: drawn size and pickup box both use it. */
-const COIN_R = 13;
+const COIN_R = 29;
 const COIN_LIFE = 10;
 const COIN_GRAVITY = 1100;
 const MAX_COINS = 60;
@@ -256,7 +256,7 @@ function destroy(g: Game, t: Target, how: "bump" | "stomp" | "punch") {
     g.coins.push({
       x: cx,
       y: cy,
-      vx: (i - (COINS_PER_TARGET - 1) / 2) * 46 + rand(-10, 10) + push * 0.3,
+      vx: (i - (COINS_PER_TARGET - 1) / 2) * 72 + rand(-10, 10) + push * 0.3,
       vy: -rand(290, 360),
       age: 0,
       phase: rand(0, Math.PI),
@@ -301,7 +301,8 @@ export function demoInput(g: Game): Input {
 
   if (coin) {
     moveTo(coin.x, 3);
-    if (Math.abs(coin.x - pc) < 14 && coin.y < p.y - 6 && coin.resting) input.jump = true;
+    // Only jump for a coin resting up on a block, above the player's head.
+    if (Math.abs(coin.x - pc) < 14 && coin.y + COIN_R < p.y && coin.resting) input.jump = true;
   } else if (target) {
     const tc = target.x + target.w / 2;
     if (target.kind === "float") {
@@ -526,22 +527,52 @@ export interface CoinArt {
   glow: HTMLCanvasElement;
 }
 
-/** Coin face on a 13 × 13 pixel grid: rim, lit and shaded ring, face, and a bold two-pixel ₿. */
-const COIN_GRID = 13;
-const COIN_SYMBOL = ["..#.#..", "######.", ".##..##", ".##..##", ".#####.", ".##..##", ".##..##", "######.", "..#.#.."];
-const GLOW_D = 52; // logical diameter of the halo behind each coin
+/**
+ * Coin face on a 21 × 21 pixel grid: dark rim, a reeded edge lit from the top
+ * left, an inner groove and raised border, a shaded face, an embossed
+ * three-pixel-stem ₿, and a small sparkle.
+ */
+const COIN_GRID = 21;
+const COIN_SYMBOL = [
+  "..#..#...",
+  "..#..#...",
+  "#######..",
+  ".###..##.",
+  ".###...##",
+  ".###..##.",
+  ".######..",
+  ".###...##",
+  ".###...##",
+  ".###..##.",
+  "#######..",
+  "..#..#...",
+  "..#..#...",
+];
+const SYMBOL_AT = [6, 4]; // column, row of the symbol's top-left on the grid
+const GLOW_D = 104; // logical diameter of the halo behind each coin
+
+const inSymbol = (i: number, j: number) => COIN_SYMBOL[j - SYMBOL_AT[1]]?.[i - SYMBOL_AT[0]] === "#";
 
 function coinPixel(i: number, j: number): string | null {
-  const dx = i + 0.5 - COIN_GRID / 2;
-  const dy = j + 0.5 - COIN_GRID / 2;
+  const c = COIN_GRID / 2;
+  const dx = i + 0.5 - c;
+  const dy = j + 0.5 - c;
   const d = Math.hypot(dx, dy);
-  if (d > COIN_GRID / 2) return null;
-  const symbol = COIN_SYMBOL[j - 2]?.[i - 3] === "#";
-  if (symbol) return "#5a2e00";
-  if (d > 5.6) return "#7a4800"; // dark outer rim
-  if (d > 4.6) return dx + dy < 0 ? "#ffe066" : "#c98600"; // ring: lit top-left, shaded bottom-right
-  if (dx + dy < -4.5) return "#fff1b0"; // highlight
-  if (dx + dy > 5) return "#eaa300";
+  const lit = dx + dy < 0;
+  if (d > c) return null;
+  if (d > 9.6) return "#6b3f00"; // outer rim
+  if (d > 8.6) {
+    // Reeded edge: alternating ridges around the coin, lit top-left.
+    const ridge = Math.floor(((Math.atan2(dy, dx) + Math.PI) / (Math.PI * 2)) * 32) % 2 === 0;
+    return lit ? (ridge ? "#ffe680" : "#f0b400") : ridge ? "#d79a00" : "#a86e00";
+  }
+  if (d > 7.8) return "#8a5600"; // groove
+  if (d > 7) return lit ? "#ffe58a" : "#d49600"; // raised inner border
+  if (inSymbol(i, j)) return "#5a2e00";
+  if (inSymbol(i - 1, j - 1)) return "#ffe9a0"; // emboss: light catches the symbol's lower-right edge
+  if ((i === 5 && j === 6) || (i === 5 && j === 5) || (i === 4 && j === 6)) return i === 5 && j === 6 ? "#ffffff" : "#fff6cc"; // sparkle
+  if (dx + dy < -6) return "#fff1b0"; // highlight
+  if (dx + dy > 6) return "#eaa300"; // shade
   return GOLD;
 }
 
@@ -566,7 +597,7 @@ export function makeCoinArt(scale: number): CoinArt {
   glow.width = glow.height = g;
   const y = glow.getContext("2d")!;
   const halo = y.createRadialGradient(g / 2, g / 2, g * 0.16, g / 2, g / 2, g / 2);
-  halo.addColorStop(0, "rgba(255,205,70,0.6)");
+  halo.addColorStop(0, "rgba(255,205,70,0.55)");
   halo.addColorStop(0.45, "rgba(255,170,30,0.22)");
   halo.addColorStop(1, "rgba(255,150,0,0)");
   y.fillStyle = halo;
@@ -699,7 +730,7 @@ export function render(ctx: CanvasRenderingContext2D, g: Game, viewW: number, sc
     if (squeeze < 0.4) {
       // Edge-on: a bright rim line keeps the coin solid while it turns.
       ctx.fillStyle = "#ffe066";
-      ctx.fillRect(snap(c.x - 1), snap(c.y - COIN_R + 2), 2, D - 4);
+      ctx.fillRect(snap(c.x - 1.5), snap(c.y - COIN_R + 3), 3, D - 6);
     }
   }
 
