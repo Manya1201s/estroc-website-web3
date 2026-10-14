@@ -21,9 +21,9 @@ import { usePageMeta } from "@/lib/usePageMeta";
 const VISION_INTEREST = "Computer Vision / Visual AI";
 
 const meta = {
-  title: "Computer Vision & Visual AI — ESTROC",
+  title: "Computer Vision & Visual AI | ESTROC",
   description:
-    "ESTROC builds custom computer vision solutions — object detection and tracking, quality inspection, OCR and document intelligence, video analytics and visual search.",
+    "ESTROC builds custom computer vision solutions, including object detection and tracking, quality inspection, OCR and document intelligence, video analytics and visual search.",
   path: VISION_ROUTE,
 };
 
@@ -134,7 +134,7 @@ export default function ComputerVision() {
               <Rise delay={0.12}>
                 <p className="text-base leading-relaxed text-zinc-400">
                   Automated visual inspection checks every part on a production line for scratches, cracks and alignment faults as it passes the
-                  camera. Run the line below to see the flow — the parts, defects and results are simulated sample data, not live AI analysis.
+                  camera. Run the line below to see how it works. The parts, defects and results are simulated sample data, not live AI analysis.
                 </p>
               </Rise>
             </div>
@@ -152,7 +152,7 @@ export default function ComputerVision() {
               index="01"
               kicker="Capabilities"
               title={["WHAT WE", <span className="text-zinc-500">BUILD</span>]}
-              copy="Six kinds of vision systems — open any card for a real-world example."
+              copy="Six kinds of vision systems. Open any card for a real-world example."
               testId="vision-capabilities"
             />
             <CapabilityCards />
@@ -167,7 +167,7 @@ export default function ComputerVision() {
               index="02"
               kicker="Featured project concepts"
               title={["PRODUCTS", <span className="text-zinc-500">IN ACTION</span>]}
-              copy="Three products ESTROC could build for you. Each screen works — try the controls."
+              copy="Three products ESTROC could build for you. Each screen works, so try the controls."
               testId="vision-projects"
             />
             <VisionShowcase onDiscuss={discussTopic} />
@@ -287,7 +287,7 @@ export default function ComputerVision() {
           <div className="mx-auto flex max-w-7xl gap-4 px-5 py-8 sm:px-8 lg:px-10">
             <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-[#ff5500]" aria-hidden="true" />
             <p className="max-w-4xl text-xs leading-relaxed text-zinc-500">
-              Projects, demos and figures on this page are illustrative concepts with simulated results — not completed client work. Real-world
+              Projects, demos and figures on this page are illustrative concepts with simulated results, not completed client work. Real-world
               performance depends on your data, cameras and testing. Healthcare imaging tools are decision-support software and require clinical
               validation. This page uses no camera and uploads no images.
             </p>

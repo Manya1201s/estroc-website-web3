@@ -330,7 +330,7 @@ export default function VisionShowcase({ onDiscuss }: { onDiscuss: (topic: strin
               ))}
             </ul>
             <div className="mt-6">
-              <DemoBadge label="ESTROC concept project — illustrative demo" />
+              <DemoBadge label="ESTROC concept project · illustrative demo" />
             </div>
             <button
               type="button"

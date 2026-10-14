@@ -21,7 +21,7 @@ import { usePageMeta } from "@/lib/usePageMeta";
 const BLOCKCHAIN_INTEREST = "Blockchain / Web3";
 
 const meta = {
-  title: "Blockchain & Web3 Development — ESTROC",
+  title: "Blockchain & Web3 Development | ESTROC",
   description:
     "ESTROC designs and develops blockchain applications, smart contracts, Web3 platforms, NFT and tokenization solutions and blockchain integrations for businesses.",
 };
@@ -117,7 +117,7 @@ export default function BlockchainWeb3() {
                 </h2>
               </div>
               <p className="max-w-md text-sm leading-relaxed text-zinc-500">
-                Break the ASCII blocks and collect the coins they drop. Game coins only — no wallet, no crypto, no real value.
+                Break the ASCII blocks and collect the coins they drop. Game coins only: no wallet, no crypto, no real value.
               </p>
             </div>
             <BlockchainQuest />
@@ -151,7 +151,7 @@ export default function BlockchainWeb3() {
               index="01"
               kicker="What we can build"
               title={["WHAT ESTROC", <span className="text-zinc-500">CAN BUILD</span>]}
-              copy="Six ways we help businesses put blockchain to work — each starting from a real business problem, not a token."
+              copy="Six ways we help businesses put blockchain to work. Each one starts from a real business problem, not a token."
               testId="web3-services"
             />
             <ServiceCards onDiscuss={discussTopic} />
@@ -181,7 +181,7 @@ export default function BlockchainWeb3() {
               index="03"
               kicker="Possible solutions"
               title={["WHAT YOUR PROJECT", <span className="text-zinc-500">COULD LOOK LIKE</span>]}
-              copy="Three hypothetical concepts showing the kind of product a blockchain project can become. Illustrative only — not client work."
+              copy="Three hypothetical concepts showing the kind of product a blockchain project can become. Illustrative only, not client work."
               testId="web3-concepts"
             />
             <ProjectConcepts onDiscuss={discussTopic} />

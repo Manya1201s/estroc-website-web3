@@ -8,7 +8,7 @@
 /** The only "what is it" content on the page: three lines, then on to services. */
 export const web3Basics: [title: string, copy: string][] = [
   ["Shared records", "Several parties work from one tamper-evident record instead of reconciling separate copies."],
-  ["Programmable rules", "Smart contracts run agreed business logic — payments, approvals, transfers — when conditions are met."],
+  ["Programmable rules", "Smart contracts run agreed business logic, such as payments, approvals and transfers, when conditions are met."],
   ["Verifiable ownership", "Tokens show who holds an asset, pass or certificate, and how it changed hands."],
 ];
 
@@ -41,7 +41,7 @@ export const web3Services: Web3Service[] = [
       "Automated transaction and approval workflows",
       "Contract integration, testing and deployment support",
     ],
-    example: "A milestone-payment workflow where funds held by a contract are released once both client and supplier approve the delivered work.",
+    example: "A milestone payment workflow where funds held by a contract are released once both client and supplier approve the delivered work.",
   },
   {
     id: "dapps",
@@ -49,7 +49,7 @@ export const web3Services: Web3Service[] = [
     problem: "An on-chain product exists, but users find wallets, networks and transaction signing confusing.",
     builds: [
       "Decentralized application interfaces",
-      "Blockchain-connected web applications",
+      "Web applications connected to a blockchain",
       "Wallet and network integrations where appropriate",
     ],
     example: "A members' portal where users connect a wallet to view their holdings and claim benefits, with a plain-language summary before every signature.",
@@ -71,10 +71,10 @@ export const web3Services: Web3Service[] = [
     problem: "Ownership of an asset lives in spreadsheets and paperwork, so transfers and reporting are slow.",
     builds: [
       "Token-based representations of eligible digital or real-world assets",
-      "Asset lifecycle and ownership-record workflows",
-      "Business-specific tokenization prototypes and platforms",
+      "Workflows for asset lifecycles and ownership records",
+      "Tokenization prototypes and platforms built around your business",
     ],
-    example: "A prototype representing fractional interests in an eligible asset, with transfers limited to verified participants — structured alongside the client's legal advisers.",
+    example: "A prototype representing fractional interests in an eligible asset, with transfers limited to verified participants, structured alongside the client's legal advisers.",
   },
   {
     id: "integrations",
@@ -104,7 +104,7 @@ export const applications: Application[] = [
     name: "Digital Commerce",
     challenge: "Brands want loyalty, access and digital products that customers can genuinely own, transfer or redeem.",
     solution: "NFT-based memberships, digital collectibles and token-enabled rewards tied to real benefits.",
-    deliverables: ["Minting and claim flows", "Holder-only content and perks", "Admin dashboard for drops and redemptions"],
+    deliverables: ["Minting and claim flows", "Content and perks for holders only", "Admin dashboard for drops and redemptions"],
   },
   {
     id: "supply-chain",
@@ -117,9 +117,9 @@ export const applications: Application[] = [
   {
     id: "energy",
     name: "Energy & Sustainability",
-    challenge: "Energy trades, meter data and renewable-energy certificates sit in separate systems, which slows settlement and makes traceability hard.",
+    challenge: "Energy trades, meter data and renewable energy certificates sit in separate systems, which slows settlement and makes traceability hard.",
     solution: "Software that keeps a shared record of trades and certificates and supports settlement workflows between participants.",
-    deliverables: ["Trading-record and settlement dashboard", "Renewable-energy certificate tracking", "Metering and operator system integrations"],
+    deliverables: ["Dashboard for trading records and settlement", "Renewable energy certificate tracking", "Metering and operator system integrations"],
     note: "Blockchain doesn't generate or deliver electricity. Any platform operates within the relevant market structure, its integrations with grid and metering systems, and energy regulation.",
   },
   {
@@ -144,7 +144,7 @@ export const applications: Application[] = [
     challenge: "Departments or partner companies need one audit trail that none of them controls alone.",
     solution: "A permissioned ledger that records shared events and automates multi-party workflow rules.",
     deliverables: ["Multi-party workflow application", "Audit-trail viewer", "ERP and database connectors"],
-    note: "Where a single organisation owns the data, a conventional database is often the better choice — and we'll tell you so.",
+    note: "Where a single organisation owns the data, a conventional database is often the better choice, and we'll tell you so.",
   },
 ];
 
@@ -165,13 +165,13 @@ export const concepts: Concept[] = [
   {
     id: "workflow",
     name: "Smart Contract Workflow",
-    summary: "Contract-driven transactions, status tracking and an administration dashboard.",
+    summary: "Transactions driven by smart contracts, with status tracking and an administration dashboard.",
     deliverables: ["Tested contract logic, ready for audit", "Milestone and approval tracking", "Role-based admin dashboard", "Notifications and exports"],
   },
   {
     id: "energy",
     name: "Energy Traceability Platform",
-    summary: "Renewable-energy records, certificate tracking and transaction history.",
+    summary: "Renewable energy records, certificate tracking and transaction history.",
     deliverables: ["Generation and trade records", "Certificate issuance and retirement", "Transaction history and audit view", "Metering and operator integrations"],
   },
 ];

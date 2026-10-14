@@ -314,7 +314,7 @@ export default function Chatbot({ hidden = false }: { hidden?: boolean }) {
             content:
               result.ok && result.via === "email"
                 ? `Thanks, ${visitor.fullName.split(" ")[0]}. Your project brief is ready. Your mail app will open so you can send it to us at ${ENQUIRY_EMAIL}.`
-                : "Thanks — we've got your project brief. Our team will review it and get back to you shortly.",
+                : "Thanks, we've got your project brief. Our team will review it and get back to you shortly.",
           },
         ]);
       }

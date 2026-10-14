@@ -345,7 +345,7 @@ export default function WorkSection() {
                   type="button"
                   onClick={() => setPaused((value) => !value)}
                   aria-pressed={paused}
-                  aria-label={reducedMotion ? "Rotation off — reduced motion" : paused ? "Resume rotation" : "Pause rotation"}
+                  aria-label={reducedMotion ? "Rotation off for reduced motion" : paused ? "Resume rotation" : "Pause rotation"}
                   disabled={!!reducedMotion}
                   className={`flex h-11 items-center gap-2 rounded-full border border-white/15 px-4 font-mono text-[10px] uppercase tracking-[0.14em] text-zinc-300 transition-colors hover:border-[#ff5500] hover:text-[#ff5500] disabled:opacity-40 ${focusRing}`}
                   data-testid="work-pause-button"

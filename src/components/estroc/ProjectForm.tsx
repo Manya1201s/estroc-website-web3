@@ -123,7 +123,7 @@ export default function ProjectForm({ prefill }: { prefill?: ProjectFormPrefill 
         <h3 className="max-w-lg text-3xl font-semibold tracking-tight text-zinc-100" data-testid="project-form-success-title">We'll review your project and come back to you.</h3>
         <p className="mt-4 max-w-md text-sm leading-relaxed text-zinc-400" data-testid="project-form-success-copy">
           {sentVia === "email"
-            ? `Your brief is open in your mail app — press send and it reaches us at ${ENQUIRY_EMAIL}.`
+            ? `Your brief is open in your mail app. Press send and it will reach us at ${ENQUIRY_EMAIL}.`
             : "Your brief is with us. Expect a reply within two working days."}
         </p>
 

@@ -11,7 +11,7 @@ import Grain from "@/components/estroc/Grain";
 export default function NotFound() {
   useEffect(() => {
     const previous = document.title;
-    document.title = "Signal lost — ESTROC";
+    document.title = "Signal lost | ESTROC";
     return () => { document.title = previous; };
   }, []);
 
@@ -29,7 +29,7 @@ export default function NotFound() {
         />
         <Rise immediate delay={0.3} className="mt-8">
           <p className="max-w-md text-base leading-relaxed text-zinc-400 sm:text-lg" data-testid="not-found-copy">
-            The page you're looking for doesn't exist — it may have moved, or never have been here at all.
+            The page you're looking for doesn't exist. It may have moved, or it was never here at all.
           </p>
         </Rise>
         <Rise immediate delay={0.45} className="mt-10">
@@ -43,7 +43,7 @@ export default function NotFound() {
         </Rise>
       </div>
       <p className="mx-auto w-full max-w-7xl px-5 pb-8 text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-600 sm:px-8 lg:px-10" data-testid="not-found-status">
-        ESTROC / India — building for the world
+        ESTROC / India / Building for the world
       </p>
     </div>
   );

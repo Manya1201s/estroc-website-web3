@@ -25,7 +25,7 @@ const navLinks: [target: string, label: string][] = [
   ["work", "WORK"],
   ["build", "CAPABILITIES"],
   [BLOCKCHAIN_ROUTE, "WEB3"],
-  [VISION_ROUTE, "VISION"],
+  [VISION_ROUTE, "COMPUTER VISION"],
   ["why", "WHY ESTROC"],
   ["process", "HOW WE WORK"],
   ["about", "ABOUT"],
@@ -140,7 +140,7 @@ export function SiteHeader({ menuOpen, onMenuOpenChange }: SiteHeaderProps) {
           </button>
 
           <nav
-            className="hidden items-center gap-3 lg:flex xl:gap-6"
+            className="hidden items-center gap-3 min-[1100px]:flex xl:gap-6"
             aria-label="Primary navigation"
           >
             {navLinks.map(([target, label]) => (
@@ -149,7 +149,7 @@ export function SiteHeader({ menuOpen, onMenuOpenChange }: SiteHeaderProps) {
                 type="button"
                 onClick={() => go(target)}
                 aria-current={current(target)}
-                className={`text-sm font-mono uppercase tracking-[0.04em] transition-colors hover:text-zinc-100 xl:tracking-[0.14em] ${
+                className={`whitespace-nowrap text-sm font-mono uppercase tracking-[0.04em] transition-colors hover:text-zinc-100 xl:tracking-[0.14em] ${
                   current(target) ? "text-[#ff5500]" : "text-zinc-500"
                 }`}
                 data-testid={`nav-${slug(target)}-link`}
@@ -159,7 +159,7 @@ export function SiteHeader({ menuOpen, onMenuOpenChange }: SiteHeaderProps) {
             ))}
           </nav>
 
-          <div className="hidden items-center gap-3 lg:flex">
+          <div className="hidden items-center gap-3 min-[1100px]:flex">
             <ThemeToggle
               theme={theme}
               onToggle={toggleTheme}
@@ -177,7 +177,7 @@ export function SiteHeader({ menuOpen, onMenuOpenChange }: SiteHeaderProps) {
             </Button>
           </div>
 
-          <div className="flex items-center gap-2 lg:hidden">
+          <div className="flex items-center gap-2 min-[1100px]:hidden">
             <ThemeToggle
               theme={theme}
               onToggle={toggleTheme}
@@ -211,7 +211,7 @@ export function SiteHeader({ menuOpen, onMenuOpenChange }: SiteHeaderProps) {
             animate={{ opacity: 1 }}
             exit={reducedMotion ? undefined : { opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className="fixed inset-x-0 bottom-0 top-[72px] z-30 flex flex-col justify-between overflow-y-auto bg-[#0a0a0b] px-5 pb-10 pt-8 lg:hidden"
+            className="fixed inset-x-0 bottom-0 top-[72px] z-30 flex flex-col justify-between overflow-y-auto bg-[#0a0a0b] px-5 pb-10 pt-8 min-[1100px]:hidden"
             aria-label="Mobile navigation"
             data-testid="nav-mobile-menu"
           >
@@ -263,7 +263,7 @@ export function SiteHeader({ menuOpen, onMenuOpenChange }: SiteHeaderProps) {
                 className="mt-7 text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-600"
                 data-testid="mobile-nav-status"
               >
-                ESTROC / India — building for the world
+                ESTROC / India / Building for the world
               </p>
             </div>
           </motion.nav>
@@ -308,7 +308,7 @@ export function SiteFooter() {
             >
               ESTROC is a technology studio focused on building modern
               digital products, software and AI solutions. We work with ideas
-              at different stages — from early concepts and MVPs to existing
+              at different stages, from early concepts and MVPs to existing
               products that need to evolve.
             </p>
           </div>

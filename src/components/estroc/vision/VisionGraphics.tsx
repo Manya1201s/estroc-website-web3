@@ -75,7 +75,7 @@ const S = "currentColor";
 
 export function HeroScene({ animate }: { animate: boolean }) {
   return (
-    <Canvas w={640} h={460} label="Illustration: a warehouse dock with detection boxes around a forklift, a pallet, shelf stock and a worker, a tracked path and a live-count panel">
+    <Canvas w={640} h={460} label="Illustration: a warehouse dock with detection boxes around a forklift, a pallet, shelf stock and a worker, a tracked path and a live count panel">
       {/* Back wall and floor in perspective */}
       <g className="text-zinc-700">
         <rect x="0" y="40" width="640" height="190" className="cv-fill-2" />

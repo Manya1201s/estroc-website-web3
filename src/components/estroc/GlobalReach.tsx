@@ -17,9 +17,9 @@ export default function GlobalReach() {
           />
           <Rise delay={0.15} className="lg:pb-2">
             <p className="max-w-sm text-sm leading-relaxed text-zinc-400" data-testid="global-copy">
-              ESTROC works from India with founders and businesses wherever they are — remote by default, in your working hours when it matters.
+              ESTROC works from India with founders and businesses wherever they are. We work remotely by default, and in your working hours when it matters.
             </p>
-            <p className="mt-5 text-[10px] font-mono uppercase tracking-[0.22em] text-zinc-500" data-testid="global-meta">ESTROC / India — building for the world</p>
+            <p className="mt-5 text-[10px] font-mono uppercase tracking-[0.22em] text-zinc-500" data-testid="global-meta">ESTROC / India / Building for the world</p>
           </Rise>
         </div>
       </div>

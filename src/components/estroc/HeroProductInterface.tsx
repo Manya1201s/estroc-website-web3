@@ -207,7 +207,7 @@ export default function HeroProductInterface() {
             ))}
           </div>
           <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-600" data-testid="hero-queue-counter">
-            {String(index + 1).padStart(2, "0")} — {String(projects.length).padStart(2, "0")}
+            {String(index + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
           </span>
         </div>
 

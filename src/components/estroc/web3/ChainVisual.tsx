@@ -69,7 +69,7 @@ export default function ChainVisual({ scrollProgress }: { scrollProgress?: Motio
         viewBox="0 0 580 520"
         className="h-auto w-full overflow-visible"
         role="img"
-        aria-label="Illustration: a blockchain application as connected components — ledger, smart contract, API layer, dashboard and web app — with a new module being added"
+        aria-label="Illustration: a blockchain application built from connected components (ledger, smart contract, API layer, dashboard and web app), with a new module being added"
       >
         <defs>
           <pattern id="w3-dots" width="22" height="22" patternUnits="userSpaceOnUse">

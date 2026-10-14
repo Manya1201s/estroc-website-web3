@@ -40,7 +40,7 @@ const modes: Mode[] = [
     findings: [
       { id: "cereal", label: "Cereal box ×4", detail: "Top shelf · confidence 0.93", status: "Detected" },
       { id: "bottle", label: "Bottle ×3", detail: "Middle shelf · confidence 0.90", status: "Detected" },
-      { id: "gap", label: "Empty slot", detail: "Middle shelf, position 4 — restock suggested", status: "Action" },
+      { id: "gap", label: "Empty slot", detail: "Middle shelf, position 4 · restock suggested", status: "Action" },
       { id: "cans", label: "Can ×8", detail: "Bottom shelf · confidence 0.88", status: "Detected" },
       { id: "price", label: "Price label", detail: "Text read as ₹149.00", status: "Read" },
     ],
@@ -54,7 +54,7 @@ const modes: Mode[] = [
     findings: [
       { id: "cap", label: "Missing cap", detail: "Bottle 2 · confidence 0.96", status: "Defect" },
       { id: "fill", label: "Low fill level", detail: "Bottle 3 · below the fill line", status: "Defect" },
-      { id: "label", label: "Label skewed", detail: "Bottle 4 · confidence 0.64 — routed to an inspector", status: "Review" },
+      { id: "label", label: "Label skewed", detail: "Bottle 4 · confidence 0.64 · routed to an inspector", status: "Review" },
       { id: "pass", label: "Bottles 1 and 5", detail: "Cap, fill and label within limits", status: "Pass" },
     ],
   },
@@ -67,7 +67,7 @@ const modes: Mode[] = [
     findings: [
       { id: "tracking", label: "Tracking number", detail: "TRK 7741 2093 5518 · 0.99", status: "Extracted" },
       { id: "consignee", label: "Consignee", detail: "A. Sample · 0.95", status: "Extracted" },
-      { id: "postcode", label: "Postcode", detail: "560 0?1 · 0.68 — a digit is unclear, sent to review", status: "Review" },
+      { id: "postcode", label: "Postcode", detail: "560 0?1 · 0.68 · one digit unclear, sent for review", status: "Review" },
       { id: "weight", label: "Weight", detail: "4.2 kg · 0.97", status: "Extracted" },
       { id: "service", label: "Service", detail: "Express · 0.98", status: "Extracted" },
     ],
@@ -103,7 +103,7 @@ export default function VisionDemo() {
       <div className="flex flex-wrap items-center justify-between gap-4 border border-[#ff5500]/40 bg-[#ff5500]/[0.06] px-4 py-3">
         <p className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-[#ff5500] sm:text-xs" data-testid="vision-demo-label">
           <span className="h-1.5 w-1.5 rounded-full bg-[#ff5500]" aria-hidden="true" />
-          Interactive concept demo — simulated results
+          Interactive concept demo · simulated results
         </p>
         <p className="text-xs text-zinc-500">Illustrations only. No images are uploaded and no camera is used.</p>
       </div>

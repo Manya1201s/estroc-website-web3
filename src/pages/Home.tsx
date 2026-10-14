@@ -81,7 +81,7 @@ const timelineStages = [
   ],
   [
     "EVOLVE",
-    "Maintain, monitor and keep improving the product — new features, scale and security as the business grows.",
+    "Maintain, monitor and keep improving the product, adding new features, scale and security as the business grows.",
     "Support / scale",
   ],
 ];

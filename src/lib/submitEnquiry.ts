@@ -7,15 +7,15 @@ export type SubmitResult = { ok: true; via: "endpoint" | "email" } | { ok: false
 
 function asPlainText(form: ProjectFormValues) {
   return [
-    `Interested in:  ${form.interests.join(", ") || "—"}`,
-    `Stage:          ${form.stage || "—"}`,
-    `Budget:         ${form.budget || "—"}`,
+    `Interested in:  ${form.interests.join(", ") || "Not provided"}`,
+    `Stage:          ${form.stage || "Not provided"}`,
+    `Budget:         ${form.budget || "Not provided"}`,
     `Name:           ${form.fullName}`,
     `Email:          ${form.email}`,
-    `Mobile:         ${form.phone || "—"}`,
+    `Mobile:         ${form.phone || "Not provided"}`,
     "",
     "Message",
-    form.message || "—",
+    form.message || "Not provided",
   ].join("\n");
 }
 
@@ -35,7 +35,7 @@ export async function submitEnquiry(form: ProjectFormValues): Promise<SubmitResu
     if (!response.ok) throw new Error(`The mail service replied ${response.status}.`);
     return { ok: true, via: "endpoint" };
   } catch {
-    const subject = `New project enquiry — ${form.fullName}`;
+    const subject = `New project enquiry from ${form.fullName}`;
     window.location.href = `mailto:${ENQUIRY_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(asPlainText(form))}`;
     return { ok: true, via: "email" };
   }
