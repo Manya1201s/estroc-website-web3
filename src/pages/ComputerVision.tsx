@@ -11,6 +11,7 @@ import { SiteFooter, SiteHeader, VISION_ROUTE, useOpenEnquiry } from "@/componen
 import CapabilityCards from "@/components/estroc/vision/CapabilityCards";
 import VisionDemo from "@/components/estroc/vision/VisionDemo";
 import { HeroScene } from "@/components/estroc/vision/VisionGraphics";
+import VisionInspectLive from "@/components/estroc/vision/VisionInspectLive";
 import VisionShowcase from "@/components/estroc/vision/VisionShowcase";
 import { SectionIntro, focusRing } from "@/components/estroc/web3/shared";
 import { visionOptions, visionUseCases } from "@/lib/visionContent";
@@ -112,6 +113,35 @@ export default function ComputerVision() {
             </div>
             <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-600">Illustrative scene / simulated detections</p>
           </motion.div>
+        </section>
+
+        {/* ========================= VISIONINSPECT (LIVE DEMO) ========================= */}
+
+        <section id="vision-inspect" className="border-t border-white/[0.08]" aria-labelledby="vision-inspect-title" data-testid="vision-inspect-section">
+          <div className="mx-auto max-w-7xl px-5 py-14 sm:px-8 lg:px-10 lg:py-20">
+            <div className="mb-8 grid gap-x-12 gap-y-4 lg:grid-cols-[1fr_minmax(0,28rem)] lg:items-end">
+              <div>
+                <Rise>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-[#ff5500]">Interactive demo · AI-powered quality inspection</p>
+                </Rise>
+                <MaskLines
+                  as="h2"
+                  lines={[<span id="vision-inspect-title">VISIONINSPECT</span>, <span className="text-zinc-500">Precision You Can See.</span>]}
+                  className="mt-3 text-4xl font-semibold leading-[1] tracking-[-0.06em] text-zinc-100 sm:text-6xl"
+                  testId="vision-inspect-heading"
+                />
+              </div>
+              <Rise delay={0.12}>
+                <p className="text-base leading-relaxed text-zinc-400">
+                  Automated visual inspection checks every part on a production line for scratches, cracks and alignment faults as it passes the
+                  camera. Run the line below to see the flow — the parts, defects and results are simulated sample data, not live AI analysis.
+                </p>
+              </Rise>
+            </div>
+            <Rise delay={0.18}>
+              <VisionInspectLive />
+            </Rise>
+          </div>
         </section>
 
         {/* ========================= WHAT WE BUILD ========================= */}

@@ -21,6 +21,7 @@ export const BLOCKCHAIN_ROUTE = "/blockchain-web3";
 export const VISION_ROUTE = "/computer-vision";
 
 const navLinks: [target: string, label: string][] = [
+  ["/", "HOME"],
   ["work", "WORK"],
   ["build", "CAPABILITIES"],
   [BLOCKCHAIN_ROUTE, "WEB3"],
@@ -35,7 +36,7 @@ const legalLinks: [label: string, url: string][] = [
   ["Terms & conditions", ""],
 ];
 
-const slug = (value: string) => value.replace(/^\//, "").toLowerCase().replaceAll(" ", "-");
+const slug = (value: string) => value === "/" ? "home" : value.replace(/^\//, "").toLowerCase().replaceAll(" ", "-");
 
 export function useGoTo() {
   const scrollToId = useScrollTo();
@@ -111,7 +112,8 @@ export function SiteHeader({ menuOpen, onMenuOpenChange }: SiteHeaderProps) {
     // so resume first, then scroll, or a jump chosen from the menu never runs.
     if (menuOpen) lenis?.start();
     onMenuOpenChange(false);
-    goTo(target);
+    // Already home: HOME (like the logo) returns to the top instead of re-navigating.
+    goTo(target === "/" && pathname === "/" ? "top" : target);
   };
 
   const current = (target: string) => (target === pathname ? "page" : undefined);
@@ -129,7 +131,7 @@ export function SiteHeader({ menuOpen, onMenuOpenChange }: SiteHeaderProps) {
         <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-5 sm:px-8 lg:px-10">
           <button
             type="button"
-            onClick={() => go(pathname === "/" ? "top" : "/")}
+            onClick={() => go("/")}
             className="text-3xl font-bold tracking-[-0.07em] text-zinc-100 transition-colors hover:text-[#ff5500] sm:text-4xl"
             aria-label="ESTROC home"
             data-testid="nav-logo-button"
@@ -138,7 +140,7 @@ export function SiteHeader({ menuOpen, onMenuOpenChange }: SiteHeaderProps) {
           </button>
 
           <nav
-            className="hidden items-center gap-3.5 lg:flex xl:gap-6"
+            className="hidden items-center gap-3 lg:flex xl:gap-6"
             aria-label="Primary navigation"
           >
             {navLinks.map(([target, label]) => (
@@ -147,7 +149,7 @@ export function SiteHeader({ menuOpen, onMenuOpenChange }: SiteHeaderProps) {
                 type="button"
                 onClick={() => go(target)}
                 aria-current={current(target)}
-                className={`text-sm font-mono uppercase tracking-[0.08em] transition-colors hover:text-zinc-100 xl:tracking-[0.14em] ${
+                className={`text-sm font-mono uppercase tracking-[0.04em] transition-colors hover:text-zinc-100 xl:tracking-[0.14em] ${
                   current(target) ? "text-[#ff5500]" : "text-zinc-500"
                 }`}
                 data-testid={`nav-${slug(target)}-link`}
